@@ -9,6 +9,11 @@
 <meta property="og:description" content="Financial solutions, business opportunities, collaborations and meaningful connections.">
 <meta property="og:image" content="images/og-image.png">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0b0d">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MoneyWithVikas — Connect with Vikas Mahaveer">
+<meta name="twitter:description" content="Finance, business opportunities, collaborations and meaningful connections.">
+<link rel="canonical" href="https://moneywithvikas.com/">
 <link rel="icon" type="image/png" href="images/favicon.png">
 <style>
 :root{
@@ -28,16 +33,24 @@ a{text-decoration:none;color:inherit}
 .hint{margin-left:auto;color:var(--muted);font-size:13px}
 
 /* ---------- NAV ---------- */
-nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+html{scroll-behavior:smooth} nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:36px;height:72px}
 .logo{font-weight:800;font-size:18px;letter-spacing:.5px}
 .logo small{display:block;font-weight:400;font-size:9px;letter-spacing:2px;color:var(--muted)}
 .logo b{color:var(--red)}
-.nav-links{display:flex;gap:32px;margin-left:auto;font-size:14px;color:var(--muted)}
+.menu-toggle{display:none;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:9px 11px;font-size:18px;cursor:pointer}.nav-links{display:flex;gap:32px;margin-left:auto;font-size:14px;color:var(--muted)}
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--text);border-bottom:2px solid var(--yellow)}
 .btn{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:#111;font-weight:700;padding:12px 22px;border-radius:6px;border:none;cursor:pointer;font-size:14px}
 .btn:hover{filter:brightness(1.08)}
+.btn:focus-visible,.btn-slot:focus-visible,.btn-ghost:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+.card{cursor:pointer}
+.card.selected{border-color:var(--yellow);box-shadow:0 0 0 2px rgba(255,212,0,.16),0 14px 36px rgba(0,0,0,.45)}
+.form-status{display:none;margin-top:14px;padding:12px 14px;border-radius:8px;font-size:13px}
+.form-status.success{display:block;background:rgba(24,201,100,.12);border:1px solid rgba(24,201,100,.35);color:#8ff0b6}
+.form-status.error{display:block;background:rgba(228,0,43,.12);border:1px solid rgba(228,0,43,.35);color:#ff9bad}
+.btn.is-loading{opacity:.7;pointer-events:none}
+.mobile-nav{display:none}
 
 /* ---------- HERO ---------- */
 .hero{position:relative;padding:80px 0 60px;overflow:hidden}
@@ -129,11 +142,17 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
 .copy{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
 
 @media(max-width:1000px){
+  .menu-toggle{display:block;margin-left:auto}
+  .nav-in>.btn{display:none}
+  .nav-links{display:none;position:absolute;left:0;right:0;top:72px;background:rgba(11,11,13,.98);padding:16px 24px;flex-direction:column;gap:0;border-bottom:1px solid var(--line)}
+  nav.menu-open .nav-links{display:flex}
+  .nav-links a{padding:14px 0;border-bottom:1px solid var(--line)}
+  .nav-links a:last-child{border-bottom:0}
+
   .cards{grid-template-columns:repeat(3,1fr)}
   .social{grid-template-columns:repeat(2,1fr)}
   .plats{grid-template-columns:repeat(2,1fr)}
   .hero-grid,.split{grid-template-columns:1fr}
-  .nav-links{display:none}
 }
 @media(max-width:600px){
   .cards,.social,.plats,.f-grid,.slots,.assure{grid-template-columns:1fr}
@@ -146,14 +165,14 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
 
 <nav><div class="wrap nav-in">
   <a class="logo" href="#">MONEY<b>WITH</b>VIKAS<small>PEOPLE. FINANCE. OPPORTUNITIES.</small></a>
-  <div class="nav-links">
+  <div class="nav-links" id="mainNav">
     <a href="#">Home</a><a href="#">About</a><a href="#">What I Do</a>
     <a href="#">Network</a><a href="#">Content</a><a href="#" class="active">Connect</a>
   </div>
-  <button class="btn">📅 Book a Call</button>
+  <button class="btn" type="button" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">📅 Book a Call</button><button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">☰</button>
 </div></nav>
 
-<header class="hero"><div class="wrap hero-grid">
+<header class="hero" id="home"><div class="wrap hero-grid">
   <div>
     <div class="eyebrow"><span class="dash"></span>Let's Connect</div>
     <h1>Your Goals.<br>Our Conversation.<br><span class="yl">A Brighter</span> <span class="rd">Tomorrow.</span></h1>
@@ -173,7 +192,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
   </div>
 </div></header>
 
-<section class="section"><div class="wrap">
+<section class="section" id="connect"><div class="wrap">
   <div class="section-head"><span class="dash"></span><h2>How would you like to <em>connect</em>?</h2>
   <span class="hint">Select what brings you here. You can choose one or more.</span></div>
   <div class="cards">
@@ -192,7 +211,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
   </div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section" id="social"><div class="wrap">
   <div class="section-head"><span class="dash"></span><h2>Follow Vikas on <em>Social Media</em></h2>
   <span class="hint">Ideas. Insights. Updates. Be part of the journey.</span></div>
   <div class="social">
@@ -224,7 +243,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
   </div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section" id="network"><div class="wrap">
   <div class="section-head"><span class="dash" style="background:var(--yellow)"></span><h2 style="color:var(--yellow)">Owned Platforms</h2>
   <span class="hint">Different platforms. A bigger impact.</span></div>
   <div class="plats">
@@ -239,18 +258,18 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
   <div class="panel">
     <h3>Send Your <span>Request</span></h3>
     <p>Share a few details and I'll get back to you personally or through the right team member.</p>
-    <form class="f-grid">
-      <input type="text" placeholder="Your Name *" required>
-      <input type="tel" placeholder="Phone Number *" required>
-      <input type="email" placeholder="Email Address *" required>
-      <select required><option value="">Select Your Purpose *</option><option>Financial Solution</option><option>Work with Vikas</option><option>Business Opportunity</option><option>Collaboration</option><option>Join the Network</option><option>Meet Vikas</option></select>
-      <input type="text" placeholder="Your Profession / Business *" required>
-      <input type="text" placeholder="Location (City / State) *" required>
-      <textarea class="full" placeholder="Tell us about your requirement, idea or question *" required></textarea>
+    <form class="f-grid" id="requestForm" novalidate>
+      <input name="name" type="text" placeholder="Your Name *" autocomplete="name" required>
+      <input name="phone" type="tel" placeholder="Phone Number *" autocomplete="tel" required>
+      <input name="email" type="email" placeholder="Email Address *" autocomplete="email" required>
+      <select name="purpose" required><option value="">Select Your Purpose *</option><option>Financial Solution</option><option>Work with Vikas</option><option>Business Opportunity</option><option>Collaboration</option><option>Join the Network</option><option>Meet Vikas</option></select>
+      <input name="profession" type="text" placeholder="Your Profession / Business *" required>
+      <input name="location" type="text" placeholder="Location (City / State) *" autocomplete="address-level2" required>
+      <textarea name="message" class="full" placeholder="Tell us about your requirement, idea or question *" required></textarea>
       <label class="consent full"><input type="checkbox" required> I agree to be contacted by the MoneyWithVikas team.</label>
-      <button class="btn btn-red full" type="submit">✈ Send Request →</button>
+      <button class="btn btn-red full" id="submitRequest" type="submit">✈ Send Request →</button><div class="form-status full" id="formStatus" role="status" aria-live="polite"></div>
     </form>
-    <div class="lock">🔒 Your information is safe and confidential.</div>
+    <div class="lock">🔒 Your information is safe and confidential. Add your privacy policy before production launch.</div>
   </div>
 
   <div>
@@ -258,16 +277,15 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
       <h3>📅 Book a Call <span>with Vikas</span></h3>
       <p>Vikas's time is limited. Book a slot to ensure a focused and meaningful conversation.</p>
       <div class="slots">
-        <div class="slot"><div class="mins">🕐 15 MINUTES</div><div class="desc">Quick discussion — Understand your need</div><button class="btn-slot">Book 15 Min</button></div>
-        <div class="slot"><div class="mins">🕐 30 MINUTES</div><div class="desc">Detailed discussion — Explore opportunities</div><button class="btn-slot">Book 30 Min</button></div>
+        <div class="slot"><div class="mins">🕐 15 MINUTES</div><div class="desc">Quick discussion — Understand your need</div><button class="btn-slot" type="button" onclick="openBooking('15')">Book 15 Min</button></div>
+        <div class="slot"><div class="mins">🕐 30 MINUTES</div><div class="desc">Detailed discussion — Explore opportunities</div><button class="btn-slot" type="button" onclick="openBooking('30')">Book 30 Min</button></div>
       </div>
       <div class="meet"><span style="font-size:24px">👥</span>
         <div><b>Or request a meeting</b><br><small>Looking for an in-person meeting or a longer discussion?</small></div>
-        <button class="btn-ghost">Request a Meeting →</button>
+        <button class="btn-ghost" type="button" onclick="document.getElementById('requestForm').scrollIntoView({behavior:'smooth'})">Request a Meeting →</button>
       </div>
     </div>
-    <div class="panel who" style="margin-top:24px">
-      <div class="avatar"></div>
+    <div class="panel who" id="who" style="margin-top:24px">
       <div><h3>Who is Vikas?</h3>
         <img class="avatar" src="images/vikas-portrait.png" alt="Vikas Mahaveer portrait">
       <p>A finance expert, entrepreneur and creator building solutions, opportunities and a stronger tomorrow for individuals and businesses.</p>
@@ -285,6 +303,107 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
   </div>
   <div class="copy">© 2026 MoneyWithVikas — People. Finance. Opportunities.</div>
 </div></footer>
+
+
+<script>
+const BOOKING_URLS = {
+  "15": "", // Add your real 15-minute booking URL
+  "30": ""  // Add your real 30-minute booking URL
+};
+
+function toggleMenu(){
+  const nav = document.querySelector('nav');
+  const btn = document.querySelector('.menu-toggle');
+  const open = nav.classList.toggle('menu-open');
+  btn.setAttribute('aria-expanded', String(open));
+  btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('nav').classList.remove('menu-open');
+    const btn = document.querySelector('.menu-toggle');
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-label','Open menu');
+  });
+});
+
+function openBooking(minutes){
+  const url = BOOKING_URLS[minutes];
+  if(!url){
+    const status = document.getElementById('formStatus');
+    status.className = 'form-status error';
+    status.textContent = `Booking is ready to connect. Add your ${minutes}-minute calendar URL in BOOKING_URLS in index.html.`;
+    document.getElementById('requestForm').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  window.open(url, '_blank', 'noopener');
+}
+
+const purposeMap = {
+  'Financial Solution':'Financial Solution',
+  'Work with Vikas':'Work with Vikas',
+  'Business Opportunity':'Business Opportunity',
+  'Collaboration':'Collaboration',
+  'Join the Network':'Join the Network',
+  'Meet Vikas':'Meet Vikas'
+};
+
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const heading = card.querySelector('h3')?.innerText.replace(/\s+/g,' ').trim() || '';
+    let purpose = Object.keys(purposeMap).find(k => heading.includes(k));
+    if(!purpose){
+      if(heading.includes('Financial')) purpose='Financial Solution';
+      else if(heading.includes('Work with')) purpose='Work with Vikas';
+      else if(heading.includes('Business')) purpose='Business Opportunity';
+      else if(heading.includes('Collaborate')) purpose='Collaboration';
+      else if(heading.includes('Network')) purpose='Join the Network';
+      else if(heading.includes('Meet')) purpose='Meet Vikas';
+    }
+    if(purpose){
+      const select = document.querySelector('select[name="purpose"]');
+      select.value = purpose;
+      document.getElementById('requestForm').scrollIntoView({behavior:'smooth', block:'center'});
+      select.focus();
+    }
+  });
+});
+
+document.getElementById('requestForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const form = e.currentTarget;
+  const button = document.getElementById('submitRequest');
+  const status = document.getElementById('formStatus');
+
+  if(!form.checkValidity()){
+    form.reportValidity();
+    status.className = 'form-status error';
+    status.textContent = 'Please complete all required fields.';
+    return;
+  }
+
+  button.classList.add('is-loading');
+  button.textContent = 'Sending…';
+  status.className = 'form-status';
+  status.textContent = '';
+
+  // Frontend-only demo behavior. Replace this section with your API/form endpoint.
+  await new Promise(resolve => setTimeout(resolve, 700));
+
+  button.classList.remove('is-loading');
+  button.textContent = '✓ Request Ready';
+  status.className = 'form-status success';
+  status.textContent = 'Your request has been validated. Connect this form to your backend/form service to receive submissions.';
+  form.reset();
+
+  setTimeout(() => {
+    button.textContent = '✈ Send Request →';
+  }, 2200);
+});
+</script>
 
 </body>
 </html>
