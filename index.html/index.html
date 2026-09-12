@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoneyWithVikas — Connect with Vikas Mahaveer | Finance, Business & Opportunities</title>
+<meta name="description" content="Connect with Vikas Mahaveer for loans, credit solutions, business opportunities, collaborations and networking. Book a free 15 or 30 minute call.">
+<meta property="og:title" content="MoneyWithVikas — Your Goals. Our Conversation. A Brighter Tomorrow.">
+<meta property="og:description" content="Financial solutions, business opportunities, collaborations and meaningful connections.">
+<meta property="og:image" content="images/og-image.png">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<style>
+:root{
+  --bg:#0b0b0d; --panel:#141417; --panel2:#1b1b20;
+  --red:#e4002b; --red-soft:#ff2b4e; --yellow:#ffd400;
+  --text:#f2f2f2; --muted:#9a9aa3; --line:#26262c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:56px 0}
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.section-head .dash{width:34px;height:4px;background:var(--red);border-radius:2px}
+.section-head h2{font-size:clamp(20px,3vw,30px);letter-spacing:.5px;text-transform:uppercase}
+.section-head h2 em{font-style:normal;color:var(--yellow)}
+.hint{margin-left:auto;color:var(--muted);font-size:13px}
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:36px;height:72px}
+.logo{font-weight:800;font-size:18px;letter-spacing:.5px}
+.logo small{display:block;font-weight:400;font-size:9px;letter-spacing:2px;color:var(--muted)}
+.logo b{color:var(--red)}
+.nav-links{display:flex;gap:32px;margin-left:auto;font-size:14px;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--text);border-bottom:2px solid var(--yellow)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:#111;font-weight:700;padding:12px 22px;border-radius:6px;border:none;cursor:pointer;font-size:14px}
+.btn:hover{filter:brightness(1.08)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;padding:80px 0 60px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.eyebrow{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.eyebrow .dash{width:30px;height:3px;background:var(--red)}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.05;font-weight:900;text-transform:uppercase}
+.hero h1 .yl{color:var(--yellow)}
+.hero h1 .rd{color:var(--red-soft)}
+.hero p{margin:22px 0 30px;color:var(--muted);max-width:520px;font-size:16px;line-height:1.6}
+.pill-row{display:flex;gap:16px;flex-wrap:wrap}
+.pill{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);padding:12px 18px;border-radius:40px;font-size:13px}
+.pill .ic{width:30px;height:30px;border-radius:50%;background:rgba(255,212,0,.12);display:grid;place-items:center}
+.hero-quote{text-align:right}
+.hero-quote q{font-size:20px;font-style:italic;color:var(--text)}
+.hero-quote .sig{color:var(--yellow);font-style:italic;margin-top:8px}
+.hero-quote .tags{margin-top:14px;font-size:12px;letter-spacing:2px;color:var(--muted)}
+.hero-quote .tags span{color:var(--red-soft)}
+
+/* ---------- CONNECT CARDS ---------- */
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.card{position:relative;border:1px solid var(--line);border-radius:12px;padding:26px 20px 20px;min-height:230px;display:flex;flex-direction:column;gap:12px;transition:.25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.card .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:20px}
+.card h3{font-size:15px;text-transform:uppercase;letter-spacing:.5px}
+.card ul{list-style:none;font-size:12.5px;color:var(--muted);line-height:1.9}
+.card ul li::before{content:"•";margin-right:8px}
+.card .arr{margin-top:auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#111;font-weight:800;align-self:flex-end}
+.c-red   {background:linear-gradient(160deg,#3a0208,#170608);}  .c-red .ic,.c-red .arr{background:var(--red);color:#fff}
+.c-blue  {background:linear-gradient(160deg,#062033,#081018);}  .c-blue .ic,.c-blue .arr{background:#1d7ff2;color:#fff}
+.c-gold  {background:linear-gradient(160deg,#33290a,#181204);}  .c-gold .ic,.c-gold .arr{background:var(--yellow);color:#111}
+.c-purple{background:linear-gradient(160deg,#2a0b33,#150716);}  .c-purple .ic,.c-purple .arr{background:#a83cf0;color:#fff}
+.c-green {background:linear-gradient(160deg,#07331d,#061810);}  .c-green .ic,.c-green .arr{background:#18c964;color:#04140a}
+.c-orange{background:linear-gradient(160deg,#3a1a06,#1a0d04);}  .c-orange .ic,.c-orange .arr{background:#ff7a1a;color:#111}
+.c-red h3 span{color:var(--red-soft)}
+.c-gold h3 span{color:var(--yellow)}
+
+/* ---------- SOCIAL ---------- */
+.social{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.soc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;align-items:center;gap:14px;transition:.2s}
+.soc:hover{border-color:#3a3a44}
+.soc .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:20px;color:#fff}
+.soc b{display:block;font-size:14px}
+.soc small{color:var(--muted);font-size:12px}
+.soc .act{margin-left:auto;font-size:12px;font-weight:700;padding:7px 16px;border-radius:5px;color:#fff}
+.ig{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888)}
+.yt{background:#ff0000}.in{background:#0a66c2}.fb{background:#1877f2}.tw{background:#111;border:1px solid #333}
+.act-red{background:var(--red)} .act-sub{background:var(--red)} .act-blue{background:#1d7ff2}
+
+/* ---------- PLATFORMS ---------- */
+.plats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.plat{border-radius:12px;padding:26px 22px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line)}
+.plat b{font-size:22px;letter-spacing:1px}
+.plat small{display:block;font-size:11.5px;color:rgba(255,255,255,.75);margin-top:4px}
+.plat .go{width:36px;height:36px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center}
+.p-lono{background:var(--yellow);color:#111}.p-lono small{color:#5a4a00}
+.p-land{background:#123a5c}.p-jalwa{background:#8a0f1f}.p-chit{background:#8a6d00}
+
+/* ---------- FORM + BOOKING ---------- */
+.split{display:grid;grid-template-columns:1.15fr .85fr;gap:24px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:30px}
+.panel h3{font-size:22px;text-transform:uppercase}
+.panel h3 span{color:var(--red-soft)}
+.panel>p{color:var(--muted);font-size:13.5px;margin:10px 0 20px}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-grid .full{grid-column:1/-1}
+input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:13px 14px;border-radius:7px;font-size:14px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+textarea{min-height:90px;resize:vertical}
+.consent{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--muted);margin:16px 0}
+.btn-red{width:100%;justify-content:center;background:var(--red);color:#fff;padding:15px;font-size:15px;border-radius:7px}
+.lock{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.slot{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:20px;text-align:center}
+.slot .mins{font-size:22px;font-weight:800}
+.slot .desc{color:var(--muted);font-size:12px;margin:6px 0 14px}
+.btn-slot{width:100%;background:var(--red);color:#fff;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer}
+.meet{display:flex;align-items:center;gap:14px;margin-top:20px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px}
+.meet small{color:var(--muted)}
+.btn-ghost{margin-left:auto;background:transparent;border:1px solid var(--red-soft);color:#fff;padding:10px 18px;border-radius:6px;cursor:pointer}
+
+/* ---------- WHO / FOOTER ---------- */
+.who{display:flex;gap:30px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:30px}
+.avatar{width:130px;height:130px;border-radius:14px;object-fit:cover;flex-shrink:0}
+.who h3{font-size:24px}.who p{color:var(--muted);font-size:14px;margin:8px 0 16px;max-width:560px}
+footer{border-top:1px solid var(--line);margin-top:56px;padding:34px 0 44px}
+.assure{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;font-size:13.5px}
+.assure .ic{font-size:22px;margin-bottom:8px}
+.copy{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+
+@media(max-width:1000px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .social{grid-template-columns:repeat(2,1fr)}
+  .plats{grid-template-columns:repeat(2,1fr)}
+  .hero-grid,.split{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .cards,.social,.plats,.f-grid,.slots,.assure{grid-template-columns:1fr}
+  .who{flex-direction:column;text-align:center}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<nav><div class="wrap nav-in">
+  <a class="logo" href="#">MONEY<b>WITH</b>VIKAS<small>PEOPLE. FINANCE. OPPORTUNITIES.</small></a>
+  <div class="nav-links">
+    <a href="#">Home</a><a href="#">About</a><a href="#">What I Do</a>
+    <a href="#">Network</a><a href="#">Content</a><a href="#" class="active">Connect</a>
+  </div>
+  <button class="btn">📅 Book a Call</button>
+</div></nav>
+
+<header class="hero"><div class="wrap hero-grid">
+  <div>
+    <div class="eyebrow"><span class="dash"></span>Let's Connect</div>
+    <h1>Your Goals.<br>Our Conversation.<br><span class="yl">A Brighter</span> <span class="rd">Tomorrow.</span></h1>
+    <p>Whether it's a financial need, a business idea, a collaboration or just a question — I'm here to listen, understand and help you move forward.</p>
+    <div class="pill-row">
+      <div class="pill"><span class="ic">🤝</span> Real Conversations</div>
+      <div class="pill"><span class="ic">💡</span> Meaningful Opportunities</div>
+      <div class="pill"><span class="ic">👥</span> Long-term Relationships</div>
+    </div>
+  </div>
+  <div class="hero-quote">
+    <img src="images/vikas-hero.png" alt="Vikas Mahaveer — Finance expert and entrepreneur"
+       style="width:100%;border-radius:14px;border:1px solid var(--line)">
+    <q>Every meaningful opportunity starts with a conversation.</q>
+    <div class="sig">— Vikas Mahaveer</div>
+    <div class="tags">PEOPLE · IDEAS · <span>BUSINESS</span> · GROWTH</div>
+  </div>
+</div></header>
+
+<section class="section"><div class="wrap">
+  <div class="section-head"><span class="dash"></span><h2>How would you like to <em>connect</em>?</h2>
+  <span class="hint">Select what brings you here. You can choose one or more.</span></div>
+  <div class="cards">
+    <div class="card c-red"><div class="ic">₹</div><h3>I need a<br><span>Financial Solution</span></h3>
+      <ul><li>Loans</li><li>Credit Solutions</li><li>Financial Guidance</li><li>Insurance</li><li>Investments</li></ul><span class="arr">→</span></div>
+    <div class="card c-blue"><div class="ic">💼</div><h3>I want to<br>Work with Vikas</h3>
+      <ul><li>Job Opportunities</li><li>Business Development</li><li>Strategic Partnerships</li><li>Technology</li><li>Operations</li></ul><span class="arr">→</span></div>
+    <div class="card c-gold"><div class="ic">📈</div><h3>I have a<br>Business Opportunity</h3>
+      <ul><li>Startup</li><li>Partnership</li><li>Investment</li><li>Real Estate</li><li>Strategic Collaboration</li></ul><span class="arr">→</span></div>
+    <div class="card c-purple"><div class="ic">📷</div><h3>I want to<br>Collaborate</h3>
+      <ul><li>Content Creation</li><li>Podcast / Media</li><li>Events</li><li>Creator Collaboration</li><li>Brand Partnerships</li></ul><span class="arr">→</span></div>
+    <div class="card c-green"><div class="ic">🔗</div><h3>I want to<br>Join the Network</h3>
+      <ul><li>Professional</li><li>Entrepreneur</li><li>Creator</li><li>Industry Expert</li><li>NRI</li></ul><span class="arr">→</span></div>
+    <div class="card c-orange"><div class="ic">📅</div><h3>I want to<br>Meet Vikas</h3>
+      <ul><li>Call</li><li>Personal Meeting</li><li>Discussion</li><li>Networking</li><li>Explore Opportunities</li></ul><span class="arr">→</span></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="section-head"><span class="dash"></span><h2>Follow Vikas on <em>Social Media</em></h2>
+  <span class="hint">Ideas. Insights. Updates. Be part of the journey.</span></div>
+  <div class="social">
+    <a class="soc" href="https://instagram.com/VikasLoanExpert" target="_blank" rel="noopener">
+      <span class="ic ig">📸</span>
+      <span><b>Instagram</b><small>@VikasLoanExpert</small></span>
+      <span class="act act-red">Follow</span>
+    </a>
+    <a class="soc" href="https://youtube.com/@MoneyWithVikas" target="_blank" rel="noopener">
+      <span class="ic yt">▶️</span>
+      <span><b>YouTube</b><small>MoneyWithVikas</small></span>
+      <span class="act act-sub">Subscribe</span>
+    </a>
+    <a class="soc" href="https://linkedin.com/in/vikasmahaveer" target="_blank" rel="noopener">
+      <span class="ic in">in</span>
+      <span><b>LinkedIn</b><small>Vikas Mahaveer</small></span>
+      <span class="act act-blue">Connect</span>
+    </a>
+    <a class="soc" href="https://facebook.com/VikasMahaveer" target="_blank" rel="noopener">
+      <span class="ic fb">f</span>
+      <span><b>Facebook</b><small>Vikas Mahaveer</small></span>
+      <span class="act act-red">Follow</span>
+    </a>
+    <a class="soc" href="https://x.com/VikasLoanExpert" target="_blank" rel="noopener">
+      <span class="ic tw">𝕏</span>
+      <span><b>X (Twitter)</b><small>@VikasLoanExpert</small></span>
+      <span class="act act-red">Follow</span>
+    </a>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="section-head"><span class="dash" style="background:var(--yellow)"></span><h2 style="color:var(--yellow)">Owned Platforms</h2>
+  <span class="hint">Different platforms. A bigger impact.</span></div>
+  <div class="plats">
+    <a class="plat p-lono" href="#"><span><b>LONO</b><small>Loans. Banking. Financial Solutions.</small></span><span class="go">→</span></a>
+    <a class="plat p-land" href="#"><span><b>LANDFLO</b><small>Land. Property. Opportunities.</small></span><span class="go">→</span></a>
+    <a class="plat p-jalwa" href="#"><span><b>JALWA</b><small>Lifestyle. Deals. More Possibilities.</small></span><span class="go">→</span></a>
+    <a class="plat p-chit" href="#"><span><b>LONOCHITS</b><small>Save Together. Grow Together.</small></span><span class="go">→</span></a>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap split">
+  <div class="panel">
+    <h3>Send Your <span>Request</span></h3>
+    <p>Share a few details and I'll get back to you personally or through the right team member.</p>
+    <form class="f-grid">
+      <input type="text" placeholder="Your Name *" required>
+      <input type="tel" placeholder="Phone Number *" required>
+      <input type="email" placeholder="Email Address *" required>
+      <select required><option value="">Select Your Purpose *</option><option>Financial Solution</option><option>Work with Vikas</option><option>Business Opportunity</option><option>Collaboration</option><option>Join the Network</option><option>Meet Vikas</option></select>
+      <input type="text" placeholder="Your Profession / Business *" required>
+      <input type="text" placeholder="Location (City / State) *" required>
+      <textarea class="full" placeholder="Tell us about your requirement, idea or question *" required></textarea>
+      <label class="consent full"><input type="checkbox" required> I agree to be contacted by the MoneyWithVikas team.</label>
+      <button class="btn btn-red full" type="submit">✈ Send Request →</button>
+    </form>
+    <div class="lock">🔒 Your information is safe and confidential.</div>
+  </div>
+
+  <div>
+    <div class="panel" id="book">
+      <h3>📅 Book a Call <span>with Vikas</span></h3>
+      <p>Vikas's time is limited. Book a slot to ensure a focused and meaningful conversation.</p>
+      <div class="slots">
+        <div class="slot"><div class="mins">🕐 15 MINUTES</div><div class="desc">Quick discussion — Understand your need</div><button class="btn-slot">Book 15 Min</button></div>
+        <div class="slot"><div class="mins">🕐 30 MINUTES</div><div class="desc">Detailed discussion — Explore opportunities</div><button class="btn-slot">Book 30 Min</button></div>
+      </div>
+      <div class="meet"><span style="font-size:24px">👥</span>
+        <div><b>Or request a meeting</b><br><small>Looking for an in-person meeting or a longer discussion?</small></div>
+        <button class="btn-ghost">Request a Meeting →</button>
+      </div>
+    </div>
+    <div class="panel who" style="margin-top:24px">
+      <div class="avatar"></div>
+      <div><h3>Who is Vikas?</h3>
+        <img class="avatar" src="images/vikas-portrait.png" alt="Vikas Mahaveer portrait">
+      <p>A finance expert, entrepreneur and creator building solutions, opportunities and a stronger tomorrow for individuals and businesses.</p>
+      <button class="btn" style="background:var(--red);color:#fff">Know More →</button></div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="assure">
+    <div><div class="ic">🛡️</div>Your Information<br>is Safe &amp; Private</div>
+    <div><div class="ic">🕒</div>We Respect<br>Your Time</div>
+    <div><div class="ic">👥</div>You'll Get a<br>Relevant Response</div>
+    <div><div class="ic">❤️</div>Every Conversation<br>Matters</div>
+  </div>
+  <div class="copy">© 2026 MoneyWithVikas — People. Finance. Opportunities.</div>
+</div></footer>
+
+</body>
+</html>
