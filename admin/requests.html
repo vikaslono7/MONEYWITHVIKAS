@@ -23,6 +23,8 @@
       --muted: #9aa3ad;
       --yellow: #ffc400;
       --red: #ff2028;
+      --green: #19d66b;
+      --blue: #2196f3;
     }
 
     * {
@@ -40,6 +42,10 @@
       display: flex;
       min-height: 100vh;
     }
+
+    /* ==========================================
+       SIDEBAR
+       ========================================== */
 
     .sidebar {
       width: 235px;
@@ -97,7 +103,12 @@
       text-align: center;
       text-decoration: none;
       color: white;
+      font-size: 13px;
     }
+
+    /* ==========================================
+       MAIN
+       ========================================== */
 
     .main {
       margin-left: 235px;
@@ -110,6 +121,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
+      gap: 20px;
     }
 
     h1 {
@@ -121,6 +133,12 @@
       color: var(--muted);
     }
 
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .btn {
       border: 0;
       border-radius: 8px;
@@ -129,7 +147,27 @@
       color: #050505;
       font-weight: 800;
       cursor: pointer;
+      font-size: 14px;
     }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--yellow);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================
+       TOOLBAR
+       ========================================== */
 
     .toolbar {
       display: flex;
@@ -145,11 +183,54 @@
       border: 1px solid var(--line);
       padding: 11px 13px;
       border-radius: 8px;
+      outline: none;
     }
 
     .toolbar input {
       min-width: 260px;
     }
+
+    .toolbar input:focus,
+    .toolbar select:focus {
+      border-color: var(--yellow);
+    }
+
+    /* ==========================================
+       STATUS MESSAGE
+       ========================================== */
+
+    .page-status {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .page-status.error {
+      display: block;
+      background: rgba(255, 32, 40, 0.08);
+      border: 1px solid rgba(255, 32, 40, 0.4);
+      color: #ff7b80;
+    }
+
+    .page-status.loading {
+      display: block;
+      background: rgba(255, 196, 0, 0.05);
+      border: 1px solid rgba(255, 196, 0, 0.3);
+      color: var(--yellow);
+    }
+
+    .page-status.success {
+      display: block;
+      background: rgba(25, 214, 107, 0.08);
+      border: 1px solid rgba(25, 214, 107, 0.3);
+      color: #70e39a;
+    }
+
+    /* ==========================================
+       TABLE
+       ========================================== */
 
     .table-container {
       overflow-x: auto;
@@ -160,7 +241,7 @@
 
     table {
       width: 100%;
-      min-width: 900px;
+      min-width: 1000px;
       border-collapse: collapse;
     }
 
@@ -175,10 +256,19 @@
       color: var(--muted);
       font-size: 11px;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     td {
       font-size: 13px;
+    }
+
+    tbody tr:hover {
+      background: #151a20;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
     }
 
     .empty {
@@ -186,6 +276,180 @@
       padding: 50px;
       color: var(--muted);
     }
+
+    /* ==========================================
+       STATUS BADGES
+       ========================================== */
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    .status-new {
+      background: #33230f;
+      color: #ffad4a;
+    }
+
+    .status-pending {
+      background: #33230f;
+      color: #ffad4a;
+    }
+
+    .status-contacted {
+      background: #102a3d;
+      color: #5bb8ff;
+    }
+
+    .status-closed {
+      background: #18251e;
+      color: #70e39a;
+    }
+
+    .status-default {
+      background: #20262d;
+      color: #cbd0d6;
+    }
+
+    /* ==========================================
+       ACTION BUTTON
+       ========================================== */
+
+    .view-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: white;
+      border-radius: 6px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .view-btn:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    /* ==========================================
+       MODAL
+       ========================================== */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 1000;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .close-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: white;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .close-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .detail {
+      background: #0b0f13;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+    }
+
+    .detail.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .status-select {
+      background: #080b0e;
+      color: white;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
 
     @media(max-width:700px) {
 
@@ -204,6 +468,23 @@
         padding: 20px;
       }
 
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar input {
+        min-width: 100%;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail.full {
+        grid-column: auto;
+      }
+
     }
 
   </style>
@@ -213,6 +494,10 @@
 <body>
 
 <div class="layout">
+
+  <!-- ==========================================
+       SIDEBAR
+       ========================================== -->
 
   <aside class="sidebar">
 
@@ -257,6 +542,10 @@
   </aside>
 
 
+  <!-- ==========================================
+       MAIN
+       ========================================== -->
+
   <main class="main">
 
     <div class="topbar">
@@ -273,16 +562,51 @@
 
       </div>
 
-      <button
-        class="btn"
-        type="button"
-        onclick="exportRequests()"
-      >
-        Export CSV
-      </button>
+      <div class="top-actions">
+
+        <button
+          class="btn btn-secondary"
+          id="refreshButton"
+          type="button"
+        >
+          ↻ Refresh
+        </button>
+
+        <button
+          class="btn"
+          id="exportButton"
+          type="button"
+        >
+          Export CSV
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          id="logoutButton"
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
 
     </div>
 
+
+    <!-- ==========================================
+         PAGE STATUS
+         ========================================== -->
+
+    <div
+      class="page-status"
+      id="pageStatus"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- ==========================================
+         FILTERS
+         ========================================== -->
 
     <div class="toolbar">
 
@@ -298,48 +622,52 @@
           All Purposes
         </option>
 
-        <option>
+        <option value="Financial Solution">
           Financial Solution
         </option>
 
-        <option>
+        <option value="Work with Vikas">
           Work with Vikas
         </option>
 
-        <option>
+        <option value="Business Opportunity">
           Business Opportunity
         </option>
 
-        <option>
+        <option value="Collaboration">
           Collaboration
         </option>
 
-        <option>
+        <option value="Join the Network">
           Join the Network
         </option>
 
-        <option>
+        <option value="Meet Vikas">
           Meet Vikas
         </option>
 
       </select>
 
 
-      <select id="status">
+      <select id="statusFilter">
 
         <option value="">
           All Statuses
         </option>
 
-        <option>
+        <option value="new">
           New
         </option>
 
-        <option>
+        <option value="pending">
           Pending
         </option>
 
-        <option>
+        <option value="contacted">
+          Contacted
+        </option>
+
+        <option value="closed">
           Closed
         </option>
 
@@ -347,6 +675,10 @@
 
     </div>
 
+
+    <!-- ==========================================
+         REQUEST TABLE
+         ========================================== -->
 
     <div class="table-container">
 
@@ -377,16 +709,7 @@
               colspan="8"
               class="empty"
             >
-
-              No requests available yet.
-
-              <br><br>
-
-              <small>
-                Supabase will populate this table
-                after backend integration.
-              </small>
-
+              Loading requests...
             </td>
 
           </tr>
@@ -402,15 +725,1278 @@
 </div>
 
 
+<!-- ==========================================
+     REQUEST DETAIL MODAL
+     ========================================== -->
+
+<div
+  class="modal-overlay"
+  id="requestModal"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2>
+        Request Details
+      </h2>
+
+      <button
+        class="close-btn"
+        id="closeModal"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="modal-body"
+      id="modalBody"
+    >
+
+      Loading...
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <div>
+
+        <label
+          for="modalStatus"
+          class="detail-label"
+        >
+          Update Status
+        </label>
+
+        <select
+          id="modalStatus"
+          class="status-select"
+        >
+
+          <option value="new">
+            New
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="contacted">
+            Contacted
+          </option>
+
+          <option value="closed">
+            Closed
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        class="btn"
+        id="saveStatusButton"
+        type="button"
+      >
+        Save Status
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==========================================
+     SUPABASE
+     ========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/supabase.js"></script>
+
+
+<!-- ==========================================
+     REQUEST MANAGEMENT
+     ========================================== -->
+
 <script>
 
-  function exportRequests() {
+document.addEventListener("DOMContentLoaded", async () => {
 
-    alert(
-      "CSV export will be connected to the Supabase request database."
+  const requestTable =
+    document.getElementById("requestTable");
+
+  const searchInput =
+    document.getElementById("search");
+
+  const purposeFilter =
+    document.getElementById("purpose");
+
+  const statusFilter =
+    document.getElementById("statusFilter");
+
+  const refreshButton =
+    document.getElementById("refreshButton");
+
+  const exportButton =
+    document.getElementById("exportButton");
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+  const pageStatus =
+    document.getElementById("pageStatus");
+
+  const requestModal =
+    document.getElementById("requestModal");
+
+  const closeModal =
+    document.getElementById("closeModal");
+
+  const modalBody =
+    document.getElementById("modalBody");
+
+  const modalStatus =
+    document.getElementById("modalStatus");
+
+  const saveStatusButton =
+    document.getElementById("saveStatusButton");
+
+
+  let allRequests = [];
+
+  let currentRequest = null;
+
+
+  // ==========================================
+  // SUPABASE CHECK
+  // ==========================================
+
+  if (!window.mwvSupabase) {
+
+    showStatus(
+      "error",
+      "Supabase connection is unavailable."
+    );
+
+    return;
+
+  }
+
+
+  // ==========================================
+  // ADMIN CHECK
+  // ==========================================
+
+  const authorized =
+    await requireAdmin();
+
+  if (!authorized) {
+    return;
+  }
+
+
+  // ==========================================
+  // INITIAL LOAD
+  // ==========================================
+
+  await loadRequests();
+
+
+  // ==========================================
+  // SEARCH
+  // ==========================================
+
+  searchInput.addEventListener(
+    "input",
+    renderRequests
+  );
+
+
+  // ==========================================
+  // PURPOSE FILTER
+  // ==========================================
+
+  purposeFilter.addEventListener(
+    "change",
+    renderRequests
+  );
+
+
+  // ==========================================
+  // STATUS FILTER
+  // ==========================================
+
+  statusFilter.addEventListener(
+    "change",
+    renderRequests
+  );
+
+
+  // ==========================================
+  // REFRESH
+  // ==========================================
+
+  refreshButton.addEventListener(
+    "click",
+    loadRequests
+  );
+
+
+  // ==========================================
+  // EXPORT
+  // ==========================================
+
+  exportButton.addEventListener(
+    "click",
+    exportRequests
+  );
+
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+
+      logoutButton.disabled = true;
+
+      logoutButton.textContent =
+        "Logging out…";
+
+
+      const {
+        error
+      } =
+        await window.mwvSupabase.auth.signOut();
+
+
+      if (error) {
+
+        console.error(
+          "MoneyWithVikas logout error:",
+          error
+        );
+
+        logoutButton.disabled = false;
+
+        logoutButton.textContent =
+          "Logout";
+
+        showStatus(
+          "error",
+          "Unable to log out. Please try again."
+        );
+
+        return;
+
+      }
+
+
+      window.location.href =
+        "index.html";
+
+    }
+  );
+
+
+  // ==========================================
+  // CLOSE MODAL
+  // ==========================================
+
+  closeModal.addEventListener(
+    "click",
+    closeRequestModal
+  );
+
+
+  requestModal.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target === requestModal
+      ) {
+
+        closeRequestModal();
+
+      }
+
+    }
+  );
+
+
+  // ==========================================
+  // SAVE STATUS
+  // ==========================================
+
+  saveStatusButton.addEventListener(
+    "click",
+    updateRequestStatus
+  );
+
+
+  // ==========================================
+  // REQUIRE ADMIN
+  // ==========================================
+
+  async function requireAdmin() {
+
+    const {
+      data: {
+        user
+      }
+    } =
+      await window.mwvSupabase.auth.getUser();
+
+
+    if (!user) {
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    const {
+      data: admin,
+      error
+    } =
+      await window.mwvSupabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(
+        "MoneyWithVikas admin verification error:",
+        error
+      );
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    if (!admin) {
+
+      await window.mwvSupabase.auth.signOut();
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    return true;
+
+  }
+
+
+  // ==========================================
+  // LOAD REQUESTS
+  // ==========================================
+
+  async function loadRequests() {
+
+    showStatus(
+      "loading",
+      "Loading requests..."
+    );
+
+
+    refreshButton.disabled = true;
+
+
+    try {
+
+      const {
+        data,
+        error
+      } =
+        await window.mwvSupabase
+          .from("contact_requests")
+          .select("*")
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+      if (error) {
+
+        throw error;
+
+      }
+
+
+      allRequests =
+        data || [];
+
+
+      renderRequests();
+
+      hideStatus();
+
+
+    } catch (error) {
+
+      console.error(
+        "MoneyWithVikas request loading error:",
+        error
+      );
+
+
+      showStatus(
+        "error",
+        "Unable to load requests. Please refresh and try again."
+      );
+
+
+      requestTable.innerHTML = `
+        <tr>
+          <td
+            colspan="8"
+            class="empty"
+          >
+            Unable to load requests.
+          </td>
+        </tr>
+      `;
+
+    } finally {
+
+      refreshButton.disabled = false;
+
+    }
+
+  }
+
+
+  // ==========================================
+  // FILTER + RENDER
+  // ==========================================
+
+  function renderRequests() {
+
+    const search =
+      searchInput.value
+        .trim()
+        .toLowerCase();
+
+    const purpose =
+      purposeFilter.value;
+
+    const status =
+      statusFilter.value;
+
+
+    const filtered =
+      allRequests.filter(
+        (request) => {
+
+          const matchesSearch =
+            !search ||
+            String(request.name || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(request.phone || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(request.email || "")
+              .toLowerCase()
+              .includes(search);
+
+
+          const matchesPurpose =
+            !purpose ||
+            request.purpose === purpose;
+
+
+          const matchesStatus =
+            !status ||
+            String(request.status || "")
+              .toLowerCase() === status;
+
+
+          return (
+            matchesSearch &&
+            matchesPurpose &&
+            matchesStatus
+          );
+
+        }
+      );
+
+
+    if (!filtered.length) {
+
+      requestTable.innerHTML = `
+        <tr>
+          <td
+            colspan="8"
+            class="empty"
+          >
+            No matching requests found.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    requestTable.innerHTML =
+      filtered
+        .map(
+          (request) => {
+
+            const status =
+              String(
+                request.status || "new"
+              ).toLowerCase();
+
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtml(request.name)}
+                </td>
+
+                <td>
+                  ${escapeHtml(request.phone)}
+                </td>
+
+                <td>
+                  ${escapeHtml(request.email)}
+                </td>
+
+                <td>
+                  ${escapeHtml(request.purpose)}
+                </td>
+
+                <td>
+                  ${escapeHtml(request.profession)}
+                </td>
+
+                <td>
+                  ${escapeHtml(request.location)}
+                </td>
+
+                <td>
+
+                  <span
+                    class="status ${getStatusClass(status)}"
+                  >
+                    ${escapeHtml(status)}
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <button
+                    class="view-btn"
+                    type="button"
+                    data-request-id="${escapeHtml(request.id)}"
+                  >
+                    View
+                  </button>
+
+                </td>
+
+              </tr>
+            `;
+
+          }
+        )
+        .join("");
+
+
+    // ----------------------------------------
+    // ATTACH VIEW BUTTONS
+    // ----------------------------------------
+
+    requestTable
+      .querySelectorAll(
+        "[data-request-id]"
+      )
+      .forEach(
+        (button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              openRequest(
+                button.dataset.requestId
+              );
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+
+  // ==========================================
+  // OPEN REQUEST
+  // ==========================================
+
+  async function openRequest(id) {
+
+    const request =
+      allRequests.find(
+        (item) => item.id === id
+      );
+
+
+    if (!request) {
+
+      showStatus(
+        "error",
+        "Request could not be found."
+      );
+
+      return;
+
+    }
+
+
+    currentRequest =
+      request;
+
+
+    modalBody.innerHTML = `
+
+      <div class="detail-grid">
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Name
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.name)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Phone
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.phone)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Email
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.email)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Purpose
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.purpose)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Profession
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.profession)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Location
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.location)}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Consent
+          </div>
+
+          <div class="detail-value">
+            ${request.consent ? "Yes" : "No"}
+          </div>
+
+        </div>
+
+
+        <div class="detail">
+
+          <div class="detail-label">
+            Submitted
+          </div>
+
+          <div class="detail-value">
+            ${formatDateTime(request.created_at)}
+          </div>
+
+        </div>
+
+
+        <div class="detail full">
+
+          <div class="detail-label">
+            Message
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(request.message)}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    modalStatus.value =
+      String(
+        request.status || "new"
+      ).toLowerCase();
+
+
+    requestModal.classList.add(
+      "open"
     );
 
   }
+
+
+  // ==========================================
+  // CLOSE REQUEST MODAL
+  // ==========================================
+
+  function closeRequestModal() {
+
+    requestModal.classList.remove(
+      "open"
+    );
+
+    currentRequest =
+      null;
+
+  }
+
+
+  // ==========================================
+  // UPDATE STATUS
+  // ==========================================
+
+  async function updateRequestStatus() {
+
+    if (!currentRequest) {
+
+      return;
+
+    }
+
+
+    const newStatus =
+      modalStatus.value;
+
+
+    saveStatusButton.disabled =
+      true;
+
+    saveStatusButton.textContent =
+      "Saving…";
+
+
+    try {
+
+      const {
+        error
+      } =
+        await window.mwvSupabase
+          .from("contact_requests")
+          .update({
+            status: newStatus
+          })
+          .eq(
+            "id",
+            currentRequest.id
+          );
+
+
+      if (error) {
+
+        throw error;
+
+      }
+
+
+      // --------------------------------------
+      // UPDATE LOCAL DATA
+      // --------------------------------------
+
+      currentRequest.status =
+        newStatus;
+
+
+      const index =
+        allRequests.findIndex(
+          (item) =>
+            item.id === currentRequest.id
+        );
+
+
+      if (index !== -1) {
+
+        allRequests[index].status =
+          newStatus;
+
+      }
+
+
+      renderRequests();
+
+
+      showStatus(
+        "success",
+        "Request status updated successfully."
+      );
+
+
+      closeRequestModal();
+
+
+      setTimeout(
+        hideStatus,
+        2500
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "MoneyWithVikas status update error:",
+        error
+      );
+
+
+      showStatus(
+        "error",
+        "Unable to update request status."
+      );
+
+    } finally {
+
+      saveStatusButton.disabled =
+        false;
+
+      saveStatusButton.textContent =
+        "Save Status";
+
+    }
+
+  }
+
+
+  // ==========================================
+  // EXPORT CSV
+  // ==========================================
+
+  function exportRequests() {
+
+    const search =
+      searchInput.value
+        .trim()
+        .toLowerCase();
+
+    const purpose =
+      purposeFilter.value;
+
+    const status =
+      statusFilter.value;
+
+
+    const filtered =
+      allRequests.filter(
+        (request) => {
+
+          const matchesSearch =
+            !search ||
+            String(request.name || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(request.phone || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(request.email || "")
+              .toLowerCase()
+              .includes(search);
+
+
+          const matchesPurpose =
+            !purpose ||
+            request.purpose === purpose;
+
+
+          const matchesStatus =
+            !status ||
+            String(request.status || "")
+              .toLowerCase() === status;
+
+
+          return (
+            matchesSearch &&
+            matchesPurpose &&
+            matchesStatus
+          );
+
+        }
+      );
+
+
+    if (!filtered.length) {
+
+      showStatus(
+        "error",
+        "There are no requests to export."
+      );
+
+      return;
+
+    }
+
+
+    const headers = [
+      "Name",
+      "Phone",
+      "Email",
+      "Purpose",
+      "Profession",
+      "Location",
+      "Message",
+      "Consent",
+      "Status",
+      "Created At"
+    ];
+
+
+    const rows =
+      filtered.map(
+        (request) => [
+
+          request.name,
+          request.phone,
+          request.email,
+          request.purpose,
+          request.profession,
+          request.location,
+          request.message,
+          request.consent ? "Yes" : "No",
+          request.status,
+          request.created_at
+
+        ]
+      );
+
+
+    const csv = [
+
+      headers,
+
+      ...rows
+
+    ]
+      .map(
+        (row) =>
+          row
+            .map(csvEscape)
+            .join(",")
+      )
+      .join("\n");
+
+
+    const blob =
+      new Blob(
+        [csv],
+        {
+          type: "text/csv;charset=utf-8;"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(blob);
+
+
+    const link =
+      document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+      `moneywithvikas-requests-${getFileDate()}.csv`;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+
+    URL.revokeObjectURL(url);
+
+
+    showStatus(
+      "success",
+      `${filtered.length} request(s) exported successfully.`
+    );
+
+
+    setTimeout(
+      hideStatus,
+      2500
+    );
+
+  }
+
+
+  // ==========================================
+  // CSV ESCAPE
+  // ==========================================
+
+  function csvEscape(value) {
+
+    const text =
+      String(value ?? "");
+
+
+    if (
+      text.includes(",") ||
+      text.includes('"') ||
+      text.includes("\n")
+    ) {
+
+      return `"${text.replace(/"/g, '""')}"`;
+
+    }
+
+
+    return text;
+
+  }
+
+
+  // ==========================================
+  // STATUS CLASS
+  // ==========================================
+
+  function getStatusClass(status) {
+
+    if (status === "new")
+      return "status-new";
+
+    if (status === "pending")
+      return "status-pending";
+
+    if (status === "contacted")
+      return "status-contacted";
+
+    if (status === "closed")
+      return "status-closed";
+
+    return "status-default";
+
+  }
+
+
+  // ==========================================
+  // DATE FORMAT
+  // ==========================================
+
+  function formatDateTime(value) {
+
+    if (!value)
+      return "—";
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return "—";
+
+    }
+
+
+    return date.toLocaleString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+
+  }
+
+
+  // ==========================================
+  // FILE DATE
+  // ==========================================
+
+  function getFileDate() {
+
+    const now =
+      new Date();
+
+
+    return [
+      now.getFullYear(),
+      String(
+        now.getMonth() + 1
+      ).padStart(2, "0"),
+      String(
+        now.getDate()
+      ).padStart(2, "0")
+    ].join("-");
+
+  }
+
+
+  // ==========================================
+  // HTML ESCAPE
+  // ==========================================
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  // ==========================================
+  // PAGE STATUS
+  // ==========================================
+
+  function showStatus(
+    type,
+    message
+  ) {
+
+    pageStatus.className =
+      `page-status ${type}`;
+
+    pageStatus.textContent =
+      message;
+
+  }
+
+
+  function hideStatus() {
+
+    pageStatus.className =
+      "page-status";
+
+    pageStatus.textContent =
+      "";
+
+  }
+
+});
 
 </script>
 

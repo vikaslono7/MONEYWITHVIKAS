@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Bookings — MoneyWithVikas Admin</title>
+
+  <style>
+
+    :root {
+      --bg: #07090b;
+      --sidebar: #050607;
+      --panel: #101419;
+      --line: #29313a;
+      --text: #f5f5f5;
+      --muted: #9aa3ad;
+      --yellow: #ffc400;
+      --green: #19d66b;
+      --blue: #2196f3;
+      --red: #ff2028;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ==========================================
+       SIDEBAR
+       ========================================== */
+
+    .sidebar {
+      width: 235px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--sidebar);
+      border-right: 1px solid var(--line);
+      padding: 25px 15px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .logo span {
+      color: var(--yellow);
+    }
+
+    .admin-label {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-top: 5px;
+      margin-bottom: 30px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 13px;
+      margin: 5px 0;
+      border-radius: 8px;
+      color: #cbd0d6;
+      text-decoration: none;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: #171c22;
+      color: white;
+    }
+
+    .nav a.active {
+      border-left: 3px solid var(--yellow);
+    }
+
+    .website-link {
+      position: absolute;
+      left: 15px;
+      right: 15px;
+      bottom: 20px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      font-size: 13px;
+    }
+
+    /* ==========================================
+       MAIN
+       ========================================== */
+
+    .main {
+      margin-left: 235px;
+      width: calc(100% - 235px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--yellow);
+      color: #050505;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--yellow);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================
+       STATS
+       ========================================== */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .number {
+      font-size: 32px;
+      font-weight: 900;
+      margin-top: 8px;
+    }
+
+    .yellow {
+      color: var(--yellow);
+    }
+
+    .green {
+      color: var(--green);
+    }
+
+    .blue {
+      color: var(--blue);
+    }
+
+    /* ==========================================
+       STATUS
+       ========================================== */
+
+    .page-status {
+      display: none;
+      margin: 20px 0 15px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .page-status.loading {
+      display: block;
+      background: rgba(255, 196, 0, 0.06);
+      border: 1px solid rgba(255, 196, 0, 0.3);
+      color: var(--yellow);
+    }
+
+    .page-status.success {
+      display: block;
+      background: rgba(25, 214, 107, 0.08);
+      border: 1px solid rgba(25, 214, 107, 0.3);
+      color: var(--green);
+    }
+
+    .page-status.error {
+      display: block;
+      background: rgba(255, 32, 40, 0.08);
+      border: 1px solid rgba(255, 32, 40, 0.35);
+      color: #ff7b80;
+    }
+
+    /* ==========================================
+       TOOLBAR
+       ========================================== */
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 25px 0 16px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      background: var(--panel);
+      color: white;
+      border: 1px solid var(--line);
+      padding: 11px 13px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .toolbar input {
+      min-width: 260px;
+    }
+
+    .toolbar input:focus,
+    .toolbar select:focus {
+      border-color: var(--yellow);
+    }
+
+    /* ==========================================
+       TABLE
+       ========================================== */
+
+    .section {
+      margin-top: 25px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    td {
+      font-size: 13px;
+    }
+
+    tbody tr:hover {
+      background: #151a20;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px;
+      color: var(--muted);
+    }
+
+    /* ==========================================
+       BOOKING STATUS BADGES
+       ========================================== */
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: #33230f;
+      color: #ffad4a;
+    }
+
+    .status-confirmed {
+      background: #102b1d;
+      color: #5fe895;
+    }
+
+    .status-completed {
+      background: #18251e;
+      color: #70e39a;
+    }
+
+    .status-cancelled {
+      background: #351418;
+      color: #ff747a;
+    }
+
+    .status-no_show {
+      background: #20262d;
+      color: #cbd0d6;
+    }
+
+    /* ==========================================
+       VIEW BUTTON
+       ========================================== */
+
+    .view-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: white;
+      border-radius: 6px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .view-btn:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    /* ==========================================
+       MODAL
+       ========================================== */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 1000;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .close-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: white;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .close-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .detail {
+      background: #0b0f13;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+    }
+
+    .detail.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .status-select {
+      background: #080b0e;
+      color: white;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      margin-top: 6px;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
+
+    @media(max-width:900px) {
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media(max-width:750px) {
+
+      .sidebar {
+        position: static;
+        width: 100%;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+    }
+
+    @media(max-width:500px) {
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar input {
+        min-width: 100%;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail.full {
+        grid-column: auto;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+  <!-- ==========================================
+       SIDEBAR
+       ========================================== -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      MONEY<span>WITH</span>VIKAS
+    </div>
+
+    <div class="admin-label">
+      ADMIN CONTROL PANEL
+    </div>
+
+    <nav class="nav">
+
+      <a href="dashboard.html">
+        📊 Dashboard
+      </a>
+
+      <a href="requests.html">
+        📩 Requests
+      </a>
+
+      <a
+        href="bookings.html"
+        class="active"
+      >
+        📅 Bookings
+      </a>
+
+      <a href="settings.html">
+        ⚙️ Settings
+      </a>
+
+    </nav>
+
+    <a
+      class="website-link"
+      href="../index.html"
+    >
+      ← View Website
+    </a>
+
+  </aside>
+
+
+  <!-- ==========================================
+       MAIN
+       ========================================== -->
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+
+        <h1>
+          Bookings
+        </h1>
+
+        <p class="muted">
+          Manage calls and meeting enquiries
+        </p>
+
+      </div>
+
+
+      <div class="top-actions">
+
+        <button
+          class="btn btn-secondary"
+          id="refreshButton"
+          type="button"
+        >
+          ↻ Refresh
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          id="logoutButton"
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         STATUS MESSAGE
+         ========================================== -->
+
+    <div
+      id="pageStatus"
+      class="page-status"
+    ></div>
+
+
+    <!-- ==========================================
+         LIVE BOOKING STATS
+         ========================================== -->
+
+    <div class="stats">
+
+      <div class="card">
+
+        <div class="card-title">
+          15 Minute
+        </div>
+
+        <div
+          class="number"
+          id="count15"
+        >
+          0
+        </div>
+
+        <div class="muted">
+          Bookings
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          30 Minute
+        </div>
+
+        <div
+          class="number blue"
+          id="count30"
+        >
+          0
+        </div>
+
+        <div class="muted">
+          Bookings
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Pending
+        </div>
+
+        <div
+          class="number yellow"
+          id="countPending"
+        >
+          0
+        </div>
+
+        <div class="muted">
+          Needs action
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Confirmed
+        </div>
+
+        <div
+          class="number green"
+          id="countConfirmed"
+        >
+          0
+        </div>
+
+        <div class="muted">
+          Upcoming
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FILTERS
+         ========================================== -->
+
+    <div class="toolbar">
+
+      <input
+        id="search"
+        type="search"
+        placeholder="Search name, phone or email"
+      >
+
+
+      <select id="durationFilter">
+
+        <option value="">
+          All Durations
+        </option>
+
+        <option value="15">
+          15 Minutes
+        </option>
+
+        <option value="30">
+          30 Minutes
+        </option>
+
+      </select>
+
+
+      <select id="statusFilter">
+
+        <option value="">
+          All Statuses
+        </option>
+
+        <option value="pending">
+          Pending
+        </option>
+
+        <option value="confirmed">
+          Confirmed
+        </option>
+
+        <option value="completed">
+          Completed
+        </option>
+
+        <option value="cancelled">
+          Cancelled
+        </option>
+
+        <option value="no_show">
+          No Show
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ==========================================
+         BOOKING RECORDS
+         ========================================== -->
+
+    <section class="section">
+
+      <h2>
+        Booking Records
+      </h2>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Reference</th>
+              <th>Name</th>
+              <th>Duration</th>
+              <th>Date / Time</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="bookingTable">
+
+            <tr>
+
+              <td
+                colspan="6"
+                class="empty"
+              >
+                Loading bookings...
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- ==========================================
+     BOOKING DETAIL MODAL
+     ========================================== -->
+
+<div
+  class="modal-overlay"
+  id="bookingModal"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2>
+        Booking Details
+      </h2>
+
+      <button
+        class="close-btn"
+        id="closeModal"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="modal-body"
+      id="modalBody"
+    >
+      Loading...
+    </div>
+
+
+    <div class="modal-footer">
+
+      <div>
+
+        <div class="detail-label">
+          Update Status
+        </div>
+
+        <select
+          id="modalStatus"
+          class="status-select"
+        >
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="confirmed">
+            Confirmed
+          </option>
+
+          <option value="completed">
+            Completed
+          </option>
+
+          <option value="cancelled">
+            Cancelled
+          </option>
+
+          <option value="no_show">
+            No Show
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        class="btn"
+        id="saveStatusButton"
+        type="button"
+      >
+        Save Status
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==========================================
+     SUPABASE
+     ========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/supabase.js"></script>
+
+
+<!-- ==========================================
+     BOOKING MANAGEMENT
+     ========================================== -->
+
+<script>
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+
+    const bookingTable =
+      document.getElementById(
+        "bookingTable"
+      );
+
+
+    const searchInput =
+      document.getElementById(
+        "search"
+      );
+
+
+    const durationFilter =
+      document.getElementById(
+        "durationFilter"
+      );
+
+
+    const statusFilter =
+      document.getElementById(
+        "statusFilter"
+      );
+
+
+    const refreshButton =
+      document.getElementById(
+        "refreshButton"
+      );
+
+
+    const logoutButton =
+      document.getElementById(
+        "logoutButton"
+      );
+
+
+    const pageStatus =
+      document.getElementById(
+        "pageStatus"
+      );
+
+
+    const bookingModal =
+      document.getElementById(
+        "bookingModal"
+      );
+
+
+    const closeModal =
+      document.getElementById(
+        "closeModal"
+      );
+
+
+    const modalBody =
+      document.getElementById(
+        "modalBody"
+      );
+
+
+    const modalStatus =
+      document.getElementById(
+        "modalStatus"
+      );
+
+
+    const saveStatusButton =
+      document.getElementById(
+        "saveStatusButton"
+      );
+
+
+    const count15 =
+      document.getElementById(
+        "count15"
+      );
+
+
+    const count30 =
+      document.getElementById(
+        "count30"
+      );
+
+
+    const countPending =
+      document.getElementById(
+        "countPending"
+      );
+
+
+    const countConfirmed =
+      document.getElementById(
+        "countConfirmed"
+      );
+
+
+    let allBookings = [];
+
+    let currentBooking = null;
+
+
+    // ==========================================
+    // SUPABASE CHECK
+    // ==========================================
+
+    if (!window.mwvSupabase) {
+
+      showStatus(
+        "error",
+        "Supabase connection is unavailable."
+      );
+
+      return;
+
+    }
+
+
+    // ==========================================
+    // ADMIN AUTHORIZATION
+    // ==========================================
+
+    const authorized =
+      await requireAdmin();
+
+
+    if (!authorized) {
+      return;
+    }
+
+
+    // ==========================================
+    // INITIAL LOAD
+    // ==========================================
+
+    await loadBookings();
+
+
+    // ==========================================
+    // SEARCH
+    // ==========================================
+
+    searchInput.addEventListener(
+      "input",
+      renderBookings
+    );
+
+
+    // ==========================================
+    // DURATION FILTER
+    // ==========================================
+
+    durationFilter.addEventListener(
+      "change",
+      renderBookings
+    );
+
+
+    // ==========================================
+    // STATUS FILTER
+    // ==========================================
+
+    statusFilter.addEventListener(
+      "change",
+      renderBookings
+    );
+
+
+    // ==========================================
+    // REFRESH
+    // ==========================================
+
+    refreshButton.addEventListener(
+      "click",
+      loadBookings
+    );
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        logoutButton.disabled = true;
+
+        logoutButton.textContent =
+          "Logging out…";
+
+
+        const {
+          error
+        } =
+          await window.mwvSupabase.auth.signOut();
+
+
+        if (error) {
+
+          console.error(
+            "MoneyWithVikas logout error:",
+            error
+          );
+
+          logoutButton.disabled = false;
+
+          logoutButton.textContent =
+            "Logout";
+
+          showStatus(
+            "error",
+            "Unable to log out. Please try again."
+          );
+
+          return;
+
+        }
+
+
+        window.location.href =
+          "index.html";
+
+      }
+    );
+
+
+    // ==========================================
+    // CLOSE MODAL
+    // ==========================================
+
+    closeModal.addEventListener(
+      "click",
+      closeBookingModal
+    );
+
+
+    bookingModal.addEventListener(
+      "click",
+      (event) => {
+
+        if (
+          event.target === bookingModal
+        ) {
+
+          closeBookingModal();
+
+        }
+
+      }
+    );
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key === "Escape" &&
+          bookingModal.classList.contains("open")
+        ) {
+          closeBookingModal();
+        }
+      }
+    );
+
+
+    // ==========================================
+    // SAVE STATUS
+    // ==========================================
+
+    saveStatusButton.addEventListener(
+      "click",
+      updateBookingStatus
+    );
+
+
+    // ==========================================
+    // REQUIRE ADMIN
+    // ==========================================
+
+    async function requireAdmin() {
+
+      const {
+        data: {
+          user
+        }
+      } =
+        await window.mwvSupabase.auth.getUser();
+
+
+      if (!user) {
+
+        window.location.href =
+          "index.html";
+
+        return false;
+
+      }
+
+
+      const {
+        data: admin,
+        error
+      } =
+        await window.mwvSupabase
+          .from("admin_users")
+          .select("user_id")
+          .eq(
+            "user_id",
+            user.id
+          )
+          .maybeSingle();
+
+
+      if (error) {
+
+        console.error(
+          "MoneyWithVikas admin verification error:",
+          error
+        );
+
+        window.location.href =
+          "index.html";
+
+        return false;
+
+      }
+
+
+      if (!admin) {
+
+        await window.mwvSupabase.auth.signOut();
+
+        window.location.href =
+          "index.html";
+
+        return false;
+
+      }
+
+
+      return true;
+
+    }
+
+
+    // ==========================================
+    // LOAD BOOKINGS
+    // ==========================================
+
+    async function loadBookings() {
+
+      showStatus(
+        "loading",
+        "Loading bookings..."
+      );
+
+
+      refreshButton.disabled =
+        true;
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await window.mwvSupabase
+            .from("bookings")
+            .select("*")
+            .order(
+              "created_at",
+              {
+                ascending: false
+              }
+            );
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        allBookings =
+          data || [];
+
+
+        updateStats();
+
+        renderBookings();
+
+        hideStatus();
+
+
+      } catch (error) {
+
+        console.error(
+          "MoneyWithVikas booking loading error:",
+          error
+        );
+
+
+        showStatus(
+          "error",
+          "Unable to load bookings. Please refresh and try again."
+        );
+
+
+        bookingTable.innerHTML = `
+          <tr>
+            <td
+              colspan="7"
+              class="empty"
+            >
+              Unable to load bookings.
+            </td>
+          </tr>
+        `;
+
+      } finally {
+
+        refreshButton.disabled =
+          false;
+
+      }
+
+    }
+
+
+    // ==========================================
+    // UPDATE STATS
+    // ==========================================
+
+    function updateStats() {
+
+      const total15 =
+        allBookings.filter(
+          (booking) =>
+            Number(
+              booking.duration_minutes
+            ) === 15
+        ).length;
+
+
+      const total30 =
+        allBookings.filter(
+          (booking) =>
+            Number(
+              booking.duration_minutes
+            ) === 30
+        ).length;
+
+
+      const pending =
+        allBookings.filter(
+          (booking) =>
+            booking.status === "pending"
+        ).length;
+
+
+      const confirmed =
+        allBookings.filter(
+          (booking) =>
+            booking.status === "confirmed"
+        ).length;
+
+
+      count15.textContent =
+        total15;
+
+
+      count30.textContent =
+        total30;
+
+
+      countPending.textContent =
+        pending;
+
+
+      countConfirmed.textContent =
+        confirmed;
+
+    }
+
+
+    // ==========================================
+    // FILTER + RENDER
+    // ==========================================
+
+    function renderBookings() {
+
+      const search =
+        searchInput.value
+          .trim()
+          .toLowerCase();
+
+
+      const duration =
+        durationFilter.value;
+
+
+      const status =
+        statusFilter.value;
+
+
+      const filtered =
+        allBookings.filter(
+          (booking) => {
+
+
+            const matchesSearch =
+              !search ||
+              String(
+                booking.name || ""
+              )
+                .toLowerCase()
+                .includes(search) ||
+              String(
+                booking.phone || ""
+              )
+                .toLowerCase()
+                .includes(search) ||
+              String(
+                booking.email || ""
+              )
+                .toLowerCase()
+                .includes(search);
+
+
+            const matchesDuration =
+              !duration ||
+              Number(
+                booking.duration_minutes
+              ) === Number(duration);
+
+
+            const matchesStatus =
+              !status ||
+              booking.status === status;
+
+
+            return (
+              matchesSearch &&
+              matchesDuration &&
+              matchesStatus
+            );
+
+          }
+        );
+
+
+      if (!filtered.length) {
+
+        bookingTable.innerHTML = `
+          <tr>
+            <td
+              colspan="7"
+              class="empty"
+            >
+              No matching bookings found.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+
+      bookingTable.innerHTML =
+        filtered
+          .map(
+            (booking) => {
+
+              const status =
+                String(
+                  booking.status ||
+                  "pending"
+                );
+
+
+              return `
+                <tr>
+
+                  <td>
+                    <strong style="color:var(--yellow);font-size:12px;letter-spacing:.4px;">
+                      ${escapeHtml(
+                        booking.booking_reference || "—"
+                      )}
+                    </strong>
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      booking.name
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      booking.duration_minutes
+                    )} min
+                  </td>
+
+                  <td>
+                    ${formatBookingDate(
+                      booking
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      booking.email
+                    )}
+                  </td>
+
+                  <td>
+
+                    <span
+                      class="status ${getStatusClass(status)}"
+                    >
+                      ${escapeHtml(
+                        formatStatus(status)
+                      )}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <button
+                      class="view-btn"
+                      type="button"
+                      data-booking-id="${escapeHtml(
+                        booking.id
+                      )}"
+                    >
+                      View
+                    </button>
+
+                  </td>
+
+                </tr>
+              `;
+
+            }
+          )
+          .join("");
+
+
+      // ----------------------------------------
+      // VIEW BUTTONS
+      // ----------------------------------------
+
+      bookingTable
+        .querySelectorAll(
+          "[data-booking-id]"
+        )
+        .forEach(
+          (button) => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                openBooking(
+                  button.dataset.bookingId
+                );
+
+              }
+            );
+
+          }
+        );
+
+    }
+
+
+    // ==========================================
+    // OPEN BOOKING
+    // ==========================================
+
+    function openBooking(id) {
+
+      const booking =
+        allBookings.find(
+          (item) =>
+            item.id === id
+        );
+
+
+      if (!booking) {
+
+        showStatus(
+          "error",
+          "Booking could not be found."
+        );
+
+        return;
+
+      }
+
+
+      currentBooking =
+        booking;
+
+
+      modalBody.innerHTML = `
+
+        <div class="detail-grid">
+
+          <div class="detail full">
+
+            <div class="detail-label">
+              Booking Reference
+            </div>
+
+            <div
+              class="detail-value"
+              style="color:var(--yellow);font-weight:900;letter-spacing:1px;"
+            >
+              ${escapeHtml(
+                booking.booking_reference || "—"
+              )}
+            </div>
+
+          </div>
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Name
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.name
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Phone
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.phone
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Email
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.email
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Meeting Type
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.meeting_type
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Duration
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.duration_minutes
+              )} minutes
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Preferred Date
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.preferred_date ||
+                "—"
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Preferred Time
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.preferred_time ||
+                "—"
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Scheduled Day / Date / Time
+            </div>
+
+            <div class="detail-value">
+              ${formatDateTime(
+                booking.scheduled_at
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Status
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                formatStatus(
+                  booking.status
+                )
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <div class="detail-label">
+              Created
+            </div>
+
+            <div class="detail-value">
+              ${formatDateTime(
+                booking.created_at
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail full">
+
+            <div class="detail-label">
+              Notes
+            </div>
+
+            <div class="detail-value">
+              ${escapeHtml(
+                booking.notes ||
+                "No notes provided."
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="detail full">
+
+            <div class="detail-label">
+              Booking URL
+            </div>
+
+            <div class="detail-value">
+              ${
+                booking.booking_url
+                  ? `
+                    <a
+                      href="${escapeHtml(
+                        booking.booking_url
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style="color:#ffc400"
+                    >
+                      Open Booking Link →
+                    </a>
+                  `
+                  : "No booking URL"
+              }
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      modalStatus.value =
+        booking.status ||
+        "pending";
+
+
+      bookingModal.classList.add(
+        "open"
+      );
+
+    }
+
+
+    // ==========================================
+    // CLOSE MODAL
+    // ==========================================
+
+    function closeBookingModal() {
+
+      bookingModal.classList.remove(
+        "open"
+      );
+
+      currentBooking =
+        null;
+
+    }
+
+
+    // ==========================================
+    // UPDATE BOOKING STATUS
+    // ==========================================
+
+    async function updateBookingStatus() {
+
+      if (!currentBooking) {
+        return;
+      }
+
+
+      const newStatus =
+        modalStatus.value;
+
+      if (
+        currentBooking.status === newStatus
+      ) {
+        closeBookingModal();
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          `Change booking ${currentBooking.booking_reference || ""} to "${formatStatus(newStatus)}"?`
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      saveStatusButton.disabled =
+        true;
+
+
+      saveStatusButton.textContent =
+        "Saving…";
+
+
+      try {
+
+        const {
+          error
+        } =
+          await window.mwvSupabase
+            .from("bookings")
+            .update({
+              status: newStatus,
+              updated_at:
+                new Date().toISOString()
+            })
+            .eq(
+              "id",
+              currentBooking.id
+            );
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        // --------------------------------------
+        // UPDATE LOCAL RECORD
+        // --------------------------------------
+
+        currentBooking.status =
+          newStatus;
+
+
+        currentBooking.updated_at =
+          new Date().toISOString();
+
+
+        const index =
+          allBookings.findIndex(
+            (item) =>
+              item.id ===
+              currentBooking.id
+          );
+
+
+        if (index !== -1) {
+
+          allBookings[index].status =
+            newStatus;
+
+          allBookings[index].updated_at =
+            currentBooking.updated_at;
+
+        }
+
+
+        updateStats();
+
+        renderBookings();
+
+
+        closeBookingModal();
+
+
+        showStatus(
+          "success",
+          "Booking status updated successfully."
+        );
+
+
+        setTimeout(
+          hideStatus,
+          2500
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "MoneyWithVikas booking status update error:",
+          error
+        );
+
+
+        const message =
+          error?.message || "";
+
+        if (
+          message.toLowerCase().includes("exclusion") ||
+          message.toLowerCase().includes("overlap") ||
+          message.toLowerCase().includes("conflict")
+        ) {
+          showStatus(
+            "error",
+            "This booking overlaps another active booking and cannot be confirmed."
+          );
+        } else {
+          showStatus(
+            "error",
+            "Unable to update booking status."
+          );
+        }
+
+      } finally {
+
+        saveStatusButton.disabled =
+          false;
+
+        saveStatusButton.textContent =
+          "Save Status";
+
+      }
+
+    }
+
+
+    // ==========================================
+    // STATUS CLASS
+    // ==========================================
+
+    function getStatusClass(status) {
+
+      if (status === "pending")
+        return "status-pending";
+
+      if (status === "confirmed")
+        return "status-confirmed";
+
+      if (status === "completed")
+        return "status-completed";
+
+      if (status === "cancelled")
+        return "status-cancelled";
+
+      if (status === "no_show")
+        return "status-no_show";
+
+      return "status-pending";
+
+    }
+
+
+    // ==========================================
+    // STATUS LABEL
+    // ==========================================
+
+    function formatStatus(status) {
+
+      if (!status)
+        return "Pending";
+
+
+      return String(status)
+        .replace(
+          "_",
+          " "
+        )
+        .replace(
+          /\b\w/g,
+          (letter) =>
+            letter.toUpperCase()
+        );
+
+    }
+
+
+    // ==========================================
+    // BOOKING DATE
+    // ==========================================
+
+    function formatBookingDate(
+      booking
+    ) {
+
+      if (
+        booking.scheduled_at
+      ) {
+
+        const date =
+          new Date(booking.scheduled_at);
+
+        if (!Number.isNaN(date.getTime())) {
+          return date.toLocaleString(
+            "en-IN",
+            {
+              timeZone: "Asia/Kolkata",
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true
+            }
+          );
+        }
+
+      }
+
+
+      const date =
+        booking.preferred_date;
+
+
+      const time =
+        booking.preferred_time;
+
+
+      if (!date && !time) {
+
+        return "Not scheduled";
+
+      }
+
+
+      return `
+        ${escapeHtml(
+          date || "—"
+        )}
+        ${time
+          ? `<br>${escapeHtml(time)}`
+          : ""
+        }
+      `;
+
+    }
+
+
+    // ==========================================
+    // DATE / TIME
+    // ==========================================
+
+    function formatDateTime(
+      value
+    ) {
+
+      if (!value)
+        return "—";
+
+
+      const date =
+        new Date(value);
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return "—";
+
+      }
+
+
+      return date.toLocaleString(
+        "en-IN",
+        {
+          timeZone: "Asia/Kolkata",
+          weekday: "long",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        }
+      );
+
+    }
+
+
+    // ==========================================
+    // HTML ESCAPE
+    // ==========================================
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(
+        value ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    // ==========================================
+    // PAGE STATUS
+    // ==========================================
+
+    function showStatus(
+      type,
+      message
+    ) {
+
+      pageStatus.className =
+        `page-status ${type}`;
+
+      pageStatus.textContent =
+        message;
+
+    }
+
+
+    function hideStatus() {
+
+      pageStatus.className =
+        "page-status";
+
+      pageStatus.textContent =
+        "";
+
+    }
+
+  }
+
+);
+
+</script>
+
+</body>
+
+</html>

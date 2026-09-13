@@ -4,7 +4,8 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const requestForm = document.getElementById("requestForm");
+  const requestForm =
+    document.getElementById("requestForm");
 
   if (!requestForm) return;
 
@@ -42,30 +43,129 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ------------------------------------------
+    // CHECK SUPABASE CONNECTION
+    // ------------------------------------------
+
+    if (!window.mwvSupabase) {
+
+      console.error(
+        "MoneyWithVikas: Supabase client is not available."
+      );
+
+      showFormStatus(
+        "error",
+        "The request service is temporarily unavailable. Please try again."
+      );
+
+      return;
+    }
+
+
+    // ------------------------------------------
+    // GET FORM DATA
+    // ------------------------------------------
+
+    const formData =
+      new FormData(requestForm);
+
+
+    // ------------------------------------------
+    // GET CONSENT CHECKBOX
+    // ------------------------------------------
+
+    const consentCheckbox =
+      requestForm.querySelector(
+        'input[type="checkbox"]'
+      );
+
+    const consent =
+      consentCheckbox
+        ? consentCheckbox.checked
+        : false;
+
+
+    if (!consent) {
+
+      showFormStatus(
+        "error",
+        "Please confirm the consent checkbox before submitting."
+      );
+
+      return;
+    }
+
+
+    // ------------------------------------------
+    // PREPARE REQUEST
+    // ------------------------------------------
+
+    const requestData = {
+
+      name:
+        formData.get("name")?.trim() || "",
+
+      phone:
+        formData.get("phone")?.trim() || "",
+
+      email:
+        formData.get("email")?.trim() || "",
+
+      purpose:
+        formData.get("purpose")?.trim() || "",
+
+      profession:
+        formData.get("profession")?.trim() || "",
+
+      location:
+        formData.get("location")?.trim() || "",
+
+      message:
+        formData.get("message")?.trim() || "",
+
+      consent: true
+
+    };
+
+
+    // ------------------------------------------
     // LOADING STATE
     // ------------------------------------------
 
     setLoadingState(true);
 
+    showFormStatus("", "");
+
 
     // ------------------------------------------
-    // TEMPORARY FRONTEND SUBMISSION
+    // SEND TO SUPABASE
     // ------------------------------------------
-    //
-    // This will be replaced with the real
-    // backend/API connection in the next phase.
-    //
 
     try {
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 700);
-      });
+      const { error } =
+        await mwvSupabase
+          .from("contact_requests")
+          .insert(requestData)
+
+
+      // ----------------------------------------
+      // SUPABASE ERROR
+      // ----------------------------------------
+
+      if (error) {
+
+        throw error;
+
+      }
 
 
       // ----------------------------------------
       // SUCCESS
       // ----------------------------------------
+
+      console.log(
+        "MoneyWithVikas request saved successfully.",
+      );
 
       showFormStatus(
         "success",
@@ -84,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showFormStatus(
         "error",
-        "Something went wrong. Please try again."
+        "Something went wrong while submitting your request. Please try again."
       );
 
     } finally {

@@ -16,6 +16,7 @@
       --muted: #9aa3ad;
       --yellow: #ffc400;
       --red: #ff2028;
+      --green: #2ecc71;
     }
 
     * {
@@ -26,7 +27,11 @@
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgba(255, 196, 0, 0.08), transparent 35%),
+        radial-gradient(
+          circle at top right,
+          rgba(255, 196, 0, 0.08),
+          transparent 35%
+        ),
         var(--bg);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
@@ -117,6 +122,11 @@
       opacity: 0.9;
     }
 
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .back {
       display: block;
       text-align: center;
@@ -139,6 +149,36 @@
       border-radius: 8px;
       font-size: 11px;
       line-height: 1.5;
+    }
+
+    .login-status {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .login-status.error {
+      display: block;
+      border: 1px solid rgba(255, 32, 40, 0.5);
+      background: rgba(255, 32, 40, 0.08);
+      color: #ff7b80;
+    }
+
+    .login-status.success {
+      display: block;
+      border: 1px solid rgba(46, 204, 113, 0.5);
+      background: rgba(46, 204, 113, 0.08);
+      color: #70e39a;
+    }
+
+    .login-status.loading {
+      display: block;
+      border: 1px solid rgba(255, 196, 0, 0.4);
+      background: rgba(255, 196, 0, 0.05);
+      color: #ffc400;
     }
   </style>
 </head>
@@ -170,8 +210,10 @@
 
       <input
         id="email"
+        name="email"
         type="email"
         placeholder="admin@moneywithvikas.com"
+        autocomplete="username"
         required
       >
 
@@ -181,42 +223,374 @@
 
       <input
         id="password"
+        name="password"
         type="password"
         placeholder="Enter password"
+        autocomplete="current-password"
         required
       >
 
-      <button class="login-btn" type="submit">
+      <button
+        class="login-btn"
+        id="loginButton"
+        type="submit"
+      >
         Sign In →
       </button>
+
+      <div
+        class="login-status"
+        id="loginStatus"
+        aria-live="polite"
+      ></div>
 
       <a class="back" href="../index.html">
         ← Back to MoneyWithVikas
       </a>
 
       <div class="notice">
-        Backend authentication will be connected using
-        Supabase Auth. Do not treat this frontend login
-        screen as a security layer yet.
+        Authentication is protected by Supabase Auth and
+        administrator access is verified against the
+        MoneyWithVikas admin_users table.
       </div>
 
     </form>
 
   </div>
 
+
+  <!-- ==========================================
+       SUPABASE
+       ========================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="../js/supabase.js"></script>
+
+
+  <!-- ==========================================
+       ADMIN LOGIN
+       ========================================== -->
+
   <script>
-    document
-      .getElementById("adminLogin")
-      .addEventListener("submit", function (event) {
 
-        event.preventDefault();
+    document.addEventListener("DOMContentLoaded", async () => {
 
-        alert(
-          "Admin authentication will be connected to Supabase in the backend phase."
+      const loginForm =
+        document.getElementById("adminLogin");
+
+      const emailInput =
+        document.getElementById("email");
+
+      const passwordInput =
+        document.getElementById("password");
+
+      const loginButton =
+        document.getElementById("loginButton");
+
+      const loginStatus =
+        document.getElementById("loginStatus");
+
+
+      // ==========================================
+      // CHECK SUPABASE
+      // ==========================================
+
+      if (!window.mwvSupabase) {
+
+        showStatus(
+          "error",
+          "Authentication service is unavailable. Please try again later."
         );
 
-      });
+        return;
+      }
+
+
+      // ==========================================
+      // CHECK EXISTING SESSION
+      // ==========================================
+
+      const {
+        data: {
+          session
+        }
+      } = await window.mwvSupabase.auth.getSession();
+
+
+      if (session) {
+
+        const isAdmin =
+          await verifyAdmin(session.user.id);
+
+        if (isAdmin) {
+
+          window.location.href =
+            "dashboard.html";
+
+          return;
+
+        }
+
+        await window.mwvSupabase.auth.signOut();
+
+      }
+
+
+      // ==========================================
+      // LOGIN
+      // ==========================================
+
+      loginForm.addEventListener(
+        "submit",
+        async (event) => {
+
+          event.preventDefault();
+
+
+          const email =
+            emailInput.value.trim();
+
+          const password =
+            passwordInput.value;
+
+
+          if (!email || !password) {
+
+            showStatus(
+              "error",
+              "Please enter your email address and password."
+            );
+
+            return;
+          }
+
+
+          setLoading(true);
+
+          showStatus(
+            "loading",
+            "Signing in securely..."
+          );
+
+
+          try {
+
+            // ------------------------------------
+            // SUPABASE AUTHENTICATION
+            // ------------------------------------
+
+            const {
+              data,
+              error
+            } =
+              await window.mwvSupabase.auth
+                .signInWithPassword({
+                  email,
+                  password
+                });
+
+
+            if (error) {
+
+              throw error;
+
+            }
+
+
+            if (!data.user) {
+
+              throw new Error(
+                "Authentication did not return a user."
+              );
+
+            }
+
+
+            // ------------------------------------
+            // VERIFY ADMIN
+            // ------------------------------------
+
+            const isAdmin =
+              await verifyAdmin(data.user.id);
+
+
+            if (!isAdmin) {
+
+              await window.mwvSupabase.auth.signOut();
+
+              throw new Error(
+                "This account is not authorized to access the admin panel."
+              );
+
+            }
+
+
+            // ------------------------------------
+            // SUCCESS
+            // ------------------------------------
+
+            showStatus(
+              "success",
+              "Login successful. Opening Admin Panel..."
+            );
+
+
+            window.location.href =
+              "dashboard.html";
+
+
+          } catch (error) {
+
+            console.error(
+              "MoneyWithVikas admin login error:",
+              error
+            );
+
+
+            showStatus(
+              "error",
+              getLoginErrorMessage(error)
+            );
+
+
+            setLoading(false);
+
+          }
+
+        }
+      );
+
+
+      // ==========================================
+      // VERIFY ADMIN
+      // ==========================================
+
+      async function verifyAdmin(userId) {
+
+        const {
+          data,
+          error
+        } =
+          await window.mwvSupabase
+            .from("admin_users")
+            .select("user_id")
+            .eq("user_id", userId)
+            .maybeSingle();
+
+
+        if (error) {
+
+          console.error(
+            "Admin verification error:",
+            error
+          );
+
+          return false;
+
+        }
+
+
+        return !!data;
+
+      }
+
+
+      // ==========================================
+      // LOADING STATE
+      // ==========================================
+
+      function setLoading(isLoading) {
+
+        loginButton.disabled =
+          isLoading;
+
+        if (isLoading) {
+
+          loginButton.textContent =
+            "Signing In…";
+
+        } else {
+
+          loginButton.textContent =
+            "Sign In →";
+
+        }
+
+      }
+
+
+      // ==========================================
+      // STATUS MESSAGE
+      // ==========================================
+
+      function showStatus(type, message) {
+
+        loginStatus.className =
+          `login-status ${type}`;
+
+        loginStatus.textContent =
+          message;
+
+      }
+
+
+      // ==========================================
+      // FRIENDLY AUTH ERRORS
+      // ==========================================
+
+      function getLoginErrorMessage(error) {
+
+        const message =
+          error?.message || "";
+
+
+        if (
+          message.toLowerCase().includes(
+            "invalid login credentials"
+          )
+        ) {
+
+          return "Invalid email or password.";
+
+        }
+
+
+        if (
+          message.toLowerCase().includes(
+            "email not confirmed"
+          )
+        ) {
+
+          return "Your admin email has not been confirmed yet.";
+
+        }
+
+
+        if (
+          message.toLowerCase().includes(
+            "too many requests"
+          )
+        ) {
+
+          return "Too many login attempts. Please wait a moment and try again.";
+
+        }
+
+
+        return (
+          message ||
+          "Unable to sign in. Please try again."
+        );
+
+      }
+
+    });
+
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
 
 </body>
+
 </html>

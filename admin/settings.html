@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings — MoneyWithVikas Admin</title>
 
-  <style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
 
+  <style>
     :root {
       --bg: #07090b;
       --sidebar: #050607;
       --panel: #101419;
+      --panel2: #0b0e12;
       --line: #29313a;
       --text: #f5f5f5;
       --muted: #9aa3ad;
       --yellow: #ffc400;
+      --red: #ff2028;
+      --green: #19d66b;
+      --blue: #2196f3;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .layout {
@@ -43,7 +40,8 @@
     .sidebar {
       width: 235px;
       position: fixed;
-      inset: 0 auto 0 0;
+      top: 0;
+      bottom: 0;
       background: var(--sidebar);
       border-right: 1px solid var(--line);
       padding: 25px 15px;
@@ -52,17 +50,15 @@
     .logo {
       font-size: 20px;
       font-weight: 900;
+      margin-bottom: 5px;
     }
 
-    .logo span {
-      color: var(--yellow);
-    }
+    .logo span { color: var(--yellow); }
 
     .admin-label {
-      color: var(--muted);
       font-size: 9px;
       letter-spacing: 1.5px;
-      margin-top: 5px;
+      color: var(--muted);
       margin-bottom: 30px;
     }
 
@@ -96,13 +92,14 @@
       text-align: center;
       text-decoration: none;
       color: white;
+      font-size: 13px;
     }
 
     .main {
       margin-left: 235px;
       width: calc(100% - 235px);
       padding: 30px;
-      max-width: 1200px;
+      max-width: 1400px;
     }
 
     .topbar {
@@ -110,6 +107,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
+      gap: 20px;
     }
 
     h1 {
@@ -119,92 +117,246 @@
 
     .muted {
       color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .btn {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 15px;
       background: var(--yellow);
-      color: #050505;
-      border: none;
-      padding: 11px 17px;
-      border-radius: 8px;
+      color: #080808;
       font-weight: 800;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
 
-    .panel {
+    .btn:hover { opacity: .92; }
+
+    .btn-secondary {
+      background: #171c22;
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .page-status {
+      display: none;
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .page-status.show { display: block; }
+    .page-status.success {
+      background: rgba(25,214,107,.10);
+      border: 1px solid rgba(25,214,107,.30);
+      color: #63e79a;
+    }
+    .page-status.error {
+      background: rgba(255,32,40,.08);
+      border: 1px solid rgba(255,32,40,.35);
+      color: #ff858a;
+    }
+    .page-status.loading {
+      background: rgba(255,196,0,.06);
+      border: 1px solid rgba(255,196,0,.25);
+      color: var(--yellow);
+    }
+
+    .section {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 25px;
+      margin-bottom: 20px;
+      overflow: hidden;
     }
 
-    .panel h2 {
-      margin-top: 0;
-      font-size: 19px;
+    .section-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .form-grid {
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section-description {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .section-body {
+      padding: 22px;
+    }
+
+    .grid {
       display: grid;
-      grid-template-columns:
-        1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .full {
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
       grid-column: 1 / -1;
     }
 
     label {
-      color: #aeb5bd;
+      display: block;
       font-size: 12px;
+      color: #cbd0d6;
+      margin-bottom: 7px;
+      font-weight: 700;
     }
 
-    input {
-      background: #0a0d10;
+    input,
+    select {
+      width: 100%;
+      background: #080b0e;
       color: white;
       border: 1px solid var(--line);
-      padding: 12px;
-      border-radius: 8px;
+      border-radius: 7px;
+      padding: 11px 12px;
+      font: inherit;
       outline: none;
     }
 
-    input:focus {
+    input:focus,
+    select:focus {
       border-color: var(--yellow);
     }
 
-    .backend {
-      margin-top: 20px;
-    }
-
-    .backend p {
+    .help {
       color: var(--muted);
+      font-size: 11px;
+      margin-top: 6px;
+      line-height: 1.4;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      background: #33230f;
-      color: #ffad4a;
-      font-size: 11px;
+    .days {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .day-card {
+      background: #080b0e;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px 10px;
+      text-align: center;
+    }
+
+    .day-card input {
+      width: auto;
+      margin: 0 0 8px;
+      accent-color: var(--yellow);
+    }
+
+    .day-name {
+      font-size: 12px;
       font-weight: 800;
     }
 
-    @media(max-width:700px) {
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .save-bar {
+      position: sticky;
+      bottom: 15px;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 18px;
+      background: rgba(7,9,11,.96);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+    }
+
+    .save-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #080b0e;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 46px;
+    }
+
+    .checkbox-row input {
+      width: auto;
+      accent-color: var(--yellow);
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .days {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .layout { display: block; }
 
       .sidebar {
         position: static;
         width: 100%;
       }
 
-      .layout {
-        display: block;
+      .website-link {
+        position: static;
+        margin-top: 20px;
       }
 
       .main {
@@ -213,18 +365,36 @@
         padding: 20px;
       }
 
-      .form-grid {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .grid,
+      .grid.three,
+      .mode-grid {
         grid-template-columns: 1fr;
       }
 
-      .full {
+      .field.full {
         grid-column: auto;
       }
 
+      .days {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .save-bar {
+        align-items: stretch;
+        flex-direction: column;
+      }
     }
-
   </style>
-
 </head>
 
 <body>
@@ -232,238 +402,528 @@
 <div class="layout">
 
   <aside class="sidebar">
-
-    <div class="logo">
-      MONEY<span>WITH</span>VIKAS
-    </div>
-
-    <div class="admin-label">
-      ADMIN CONTROL PANEL
-    </div>
+    <div class="logo">MONEY<span>WITH</span>VIKAS</div>
+    <div class="admin-label">ADMIN CONTROL PANEL</div>
 
     <nav class="nav">
-
-      <a href="dashboard.html">
-        📊 Dashboard
-      </a>
-
-      <a href="requests.html">
-        📩 Requests
-      </a>
-
-      <a href="bookings.html">
-        📅 Bookings
-      </a>
-
-      <a
-        href="settings.html"
-        class="active"
-      >
-        ⚙️ Settings
-      </a>
-
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="requests.html">📩 Requests</a>
+      <a href="bookings.html">📅 Bookings</a>
+      <a href="settings.html" class="active">⚙️ Settings</a>
     </nav>
 
-    <a
-      class="website-link"
-      href="../index.html"
-    >
-      ← View Website
-    </a>
-
+    <a class="website-link" href="../index.html">← View Website</a>
   </aside>
-
 
   <main class="main">
 
     <div class="topbar">
-
       <div>
-
-        <h1>
-          Settings
-        </h1>
-
-        <p class="muted">
-          Website and admin configuration
-        </p>
-
+        <h1>Settings</h1>
+        <div class="muted">Control MoneyWithVikas booking and profile configuration</div>
       </div>
 
-      <button
-        class="btn"
-        onclick="saveSettings()"
-      >
-        Save Changes
-      </button>
+      <div class="top-actions">
+        <button class="btn btn-secondary" id="refreshButton" type="button">
+          ↻ Refresh
+        </button>
 
+        <button class="btn btn-secondary" id="logoutButton" type="button">
+          Logout
+        </button>
+      </div>
     </div>
 
+    <div id="pageStatus" class="page-status" aria-live="polite"></div>
 
-    <section class="panel">
+    <form id="settingsForm">
 
-      <h2>
-        Website Identity
-      </h2>
-
-      <div class="form-grid">
-
-        <div class="field">
-
-          <label>
-            Website Name
-          </label>
-
-          <input
-            id="websiteName"
-            value="MoneyWithVikas"
-          >
-
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Booking Schedule</h2>
+          <div class="section-description">
+            These settings will become the source of truth for the public booking system in Phase 2.12C.
+          </div>
         </div>
 
+        <div class="section-body">
 
-        <div class="field">
+          <div class="grid three">
 
-          <label>
-            Owner Name
-          </label>
+            <div class="field">
+              <label for="timezone">Timezone</label>
+              <select id="timezone">
+                <option value="Asia/Kolkata">Asia/Kolkata — IST</option>
+              </select>
+              <div class="help">Current MoneyWithVikas booking timezone.</div>
+            </div>
 
-          <input
-            id="ownerName"
-            value="Vikas Mahaveer"
-          >
+            <div class="field">
+              <label for="bookingStartTime">Booking Start</label>
+              <input id="bookingStartTime" type="time" required>
+            </div>
 
-        </div>
+            <div class="field">
+              <label for="bookingEndTime">Booking End</label>
+              <input id="bookingEndTime" type="time" required>
+            </div>
 
+            <div class="field">
+              <label for="slotInterval">Slot Interval</label>
+              <select id="slotInterval">
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="60">60 minutes</option>
+              </select>
+              <div class="help">Controls the public time-slot grid.</div>
+            </div>
 
-        <div class="field">
-
-          <label>
-            Tagline
-          </label>
-
-          <input
-            id="tagline"
-            value="People. Finance. Opportunities."
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Website URL
-          </label>
-
-          <input
-            id="websiteUrl"
-            value="https://moneywithvikas.com"
-          >
+          </div>
 
         </div>
+      </section>
 
 
-        <div class="field">
-
-          <label>
-            15-Minute Booking URL
-          </label>
-
-          <input
-            id="booking15"
-            placeholder="https://calendly.com/..."
-          >
-
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Working Days</h2>
+          <div class="section-description">
+            Select the normal online-booking days. Saturday and Sunday have separate meeting modes below.
+          </div>
         </div>
 
+        <div class="section-body">
+          <div class="days">
 
-        <div class="field">
+            <div class="day-card">
+              <input id="mondayEnabled" type="checkbox">
+              <div class="day-name">Monday</div>
+            </div>
 
-          <label>
-            30-Minute Booking URL
-          </label>
+            <div class="day-card">
+              <input id="tuesdayEnabled" type="checkbox">
+              <div class="day-name">Tuesday</div>
+            </div>
 
-          <input
-            id="booking30"
-            placeholder="https://calendly.com/..."
-          >
+            <div class="day-card">
+              <input id="wednesdayEnabled" type="checkbox">
+              <div class="day-name">Wednesday</div>
+            </div>
 
+            <div class="day-card">
+              <input id="thursdayEnabled" type="checkbox">
+              <div class="day-name">Thursday</div>
+            </div>
+
+            <div class="day-card">
+              <input id="fridayEnabled" type="checkbox">
+              <div class="day-name">Friday</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Weekend Rules</h2>
+          <div class="section-description">
+            Saturday can remain meeting-only while Sunday can remain unavailable.
+          </div>
         </div>
 
+        <div class="section-body">
+          <div class="mode-grid">
 
-        <div class="field full">
+            <div class="field">
+              <label for="saturdayMode">Saturday</label>
+              <select id="saturdayMode">
+                <option value="unavailable">Unavailable</option>
+                <option value="meetings_only">Meetings only</option>
+                <option value="online">Online booking</option>
+              </select>
+            </div>
 
-          <label>
-            Admin Notification Email
-          </label>
+            <div class="field">
+              <label for="sundayMode">Sunday</label>
+              <select id="sundayMode">
+                <option value="unavailable">Unavailable</option>
+                <option value="meetings_only">Meetings only</option>
+                <option value="online">Online booking</option>
+              </select>
+            </div>
 
-          <input
-            id="adminEmail"
-            type="email"
-            placeholder="admin@moneywithvikas.com"
-          >
+          </div>
+        </div>
+      </section>
 
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Meeting Durations</h2>
+          <div class="section-description">
+            Enable or disable the public booking durations offered to visitors.
+          </div>
         </div>
 
+        <div class="section-body">
+          <div class="grid">
+
+            <div class="checkbox-row">
+              <input id="duration15Enabled" type="checkbox">
+              <label for="duration15Enabled">Allow 15-minute consultations</label>
+            </div>
+
+            <div class="checkbox-row">
+              <input id="duration30Enabled" type="checkbox">
+              <label for="duration30Enabled">Allow 30-minute consultations</label>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Profile</h2>
+          <div class="section-description">
+            Basic identity information used by the admin system and future notification layer.
+          </div>
+        </div>
+
+        <div class="section-body">
+          <div class="grid">
+
+            <div class="field">
+              <label for="profileName">Profile Name</label>
+              <input id="profileName" type="text" required>
+            </div>
+
+            <div class="field">
+              <label for="profileTitle">Platform / Title</label>
+              <input id="profileTitle" type="text">
+            </div>
+
+            <div class="field">
+              <label for="profileEmail">Profile Email</label>
+              <input id="profileEmail" type="email">
+            </div>
+
+            <div class="field">
+              <label for="profilePhone">Profile Phone</label>
+              <input id="profilePhone" type="tel">
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Notifications</h2>
+          <div class="section-description">
+            These switches prepare the system for the notification layer that will be added later.
+          </div>
+        </div>
+
+        <div class="section-body">
+          <div class="grid">
+
+            <div class="checkbox-row">
+              <input id="emailNotificationsEnabled" type="checkbox">
+              <label for="emailNotificationsEnabled">Enable email notifications</label>
+            </div>
+
+            <div class="checkbox-row">
+              <input id="bookingNotificationsEnabled" type="checkbox">
+              <label for="bookingNotificationsEnabled">Booking notifications</label>
+            </div>
+
+            <div class="checkbox-row">
+              <input id="requestNotificationsEnabled" type="checkbox">
+              <label for="requestNotificationsEnabled">Request notifications</label>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <div class="save-bar">
+        <div class="save-note">
+          Settings are protected by the existing admin authorization.
+        </div>
+
+        <button class="btn" id="saveButton" type="submit">
+          Save Settings
+        </button>
       </div>
 
-    </section>
-
-
-    <section class="panel backend">
-
-      <h2>
-        Backend Status
-      </h2>
-
-      <p>
-        Database:
-        <span class="badge">
-          NOT CONNECTED
-        </span>
-      </p>
-
-      <p>
-        Authentication:
-        <span class="badge">
-          NOT CONNECTED
-        </span>
-      </p>
-
-      <p>
-        Email Notifications:
-        <span class="badge">
-          NOT CONNECTED
-        </span>
-      </p>
-
-      <p>
-        Booking Integration:
-        <span class="badge">
-          NOT CONNECTED
-        </span>
-      </p>
-
-    </section>
+    </form>
 
   </main>
-
 </div>
 
 
 <script>
+  (() => {
+    "use strict";
 
-  function saveSettings() {
+    const $ = (id) => document.getElementById(id);
 
-    alert(
-      "Settings will be saved to Supabase after backend integration."
-    );
+    const pageStatus = $("pageStatus");
+    const settingsForm = $("settingsForm");
+    const saveButton = $("saveButton");
+    const refreshButton = $("refreshButton");
+    const logoutButton = $("logoutButton");
 
-  }
+    function showStatus(type, message) {
+      pageStatus.className = "page-status show " + type;
+      pageStatus.textContent = message;
+    }
 
+    function hideStatus() {
+      pageStatus.className = "page-status";
+      pageStatus.textContent = "";
+    }
+
+    async function requireAdmin() {
+      const {
+        data: { user },
+        error: userError
+      } = await window.mwvSupabase.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "index.html";
+        return false;
+      }
+
+      const { data: admin, error } =
+        await window.mwvSupabase
+          .from("admin_users")
+          .select("user_id")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+      if (error || !admin) {
+        await window.mwvSupabase.auth.signOut();
+        window.location.href = "index.html";
+        return false;
+      }
+
+      return true;
+    }
+
+    function setForm(data) {
+      $("timezone").value = data.timezone || "Asia/Kolkata";
+      $("bookingStartTime").value = String(data.booking_start_time || "10:00:00").slice(0, 5);
+      $("bookingEndTime").value = String(data.booking_end_time || "18:00:00").slice(0, 5);
+
+      $("slotInterval").value = String(data.slot_interval_minutes || 15);
+
+      $("duration15Enabled").checked = !!data.duration_15_enabled;
+      $("duration30Enabled").checked = !!data.duration_30_enabled;
+
+      $("mondayEnabled").checked = !!data.monday_enabled;
+      $("tuesdayEnabled").checked = !!data.tuesday_enabled;
+      $("wednesdayEnabled").checked = !!data.wednesday_enabled;
+      $("thursdayEnabled").checked = !!data.thursday_enabled;
+      $("fridayEnabled").checked = !!data.friday_enabled;
+
+      $("saturdayMode").value = data.saturday_mode || "meetings_only";
+      $("sundayMode").value = data.sunday_mode || "unavailable";
+
+      $("profileName").value = data.profile_name || "";
+      $("profileTitle").value = data.profile_title || "";
+      $("profileEmail").value = data.profile_email || "";
+      $("profilePhone").value = data.profile_phone || "";
+
+      $("emailNotificationsEnabled").checked = !!data.email_notifications_enabled;
+      $("bookingNotificationsEnabled").checked = !!data.booking_notifications_enabled;
+      $("requestNotificationsEnabled").checked = !!data.request_notifications_enabled;
+    }
+
+    async function loadSettings() {
+      showStatus("loading", "Loading settings…");
+      refreshButton.disabled = true;
+
+      try {
+        const {
+          data,
+          error
+        } = await window.mwvSupabase
+          .from("site_settings")
+          .select("*")
+          .limit(1)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data) {
+          throw new Error("No site settings row was found.");
+        }
+
+        setForm(data);
+        showStatus("success", "Settings loaded successfully.");
+      } catch (error) {
+        console.error("MoneyWithVikas settings load error:", error);
+        showStatus(
+          "error",
+          "Unable to load settings. Please refresh and try again."
+        );
+      } finally {
+        refreshButton.disabled = false;
+      }
+    }
+
+    function getPayload() {
+      return {
+        timezone: $("timezone").value,
+        booking_start_time: $("bookingStartTime").value,
+        booking_end_time: $("bookingEndTime").value,
+        slot_interval_minutes: Number($("slotInterval").value),
+
+        duration_15_enabled: $("duration15Enabled").checked,
+        duration_30_enabled: $("duration30Enabled").checked,
+
+        monday_enabled: $("mondayEnabled").checked,
+        tuesday_enabled: $("tuesdayEnabled").checked,
+        wednesday_enabled: $("wednesdayEnabled").checked,
+        thursday_enabled: $("thursdayEnabled").checked,
+        friday_enabled: $("fridayEnabled").checked,
+
+        saturday_mode: $("saturdayMode").value,
+        sunday_mode: $("sundayMode").value,
+
+        profile_name: $("profileName").value.trim(),
+        profile_title: $("profileTitle").value.trim() || null,
+        profile_email: $("profileEmail").value.trim() || null,
+        profile_phone: $("profilePhone").value.trim() || null,
+
+        email_notifications_enabled: $("emailNotificationsEnabled").checked,
+        booking_notifications_enabled: $("bookingNotificationsEnabled").checked,
+        request_notifications_enabled: $("requestNotificationsEnabled").checked,
+
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    settingsForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const start = $("bookingStartTime").value;
+      const end = $("bookingEndTime").value;
+
+      if (!start || !end || start >= end) {
+        showStatus(
+          "error",
+          "Booking start time must be earlier than booking end time."
+        );
+        return;
+      }
+
+      if (!$("duration15Enabled").checked && !$("duration30Enabled").checked) {
+        showStatus(
+          "error",
+          "At least one meeting duration must remain enabled."
+        );
+        return;
+      }
+
+      if (!confirm("Save these MoneyWithVikas settings?")) {
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving…";
+      showStatus("loading", "Saving settings…");
+
+      try {
+        const payload = getPayload();
+
+        const {
+          data,
+          error
+        } = await window.mwvSupabase
+          .from("site_settings")
+          .update(payload)
+          .not("id", "is", null)
+          .select("*")
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data) {
+          throw new Error("Settings could not be updated.");
+        }
+
+        setForm(data);
+
+        showStatus(
+          "success",
+          "Settings saved successfully."
+        );
+      } catch (error) {
+        console.error("MoneyWithVikas settings save error:", error);
+
+        showStatus(
+          "error",
+          error.message || "Unable to save settings."
+        );
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save Settings";
+      }
+    });
+
+    refreshButton.addEventListener("click", loadSettings);
+
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Logging out…";
+
+      const { error } =
+        await window.mwvSupabase.auth.signOut();
+
+      if (error) {
+        console.error("MoneyWithVikas logout error:", error);
+
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Logout";
+
+        showStatus(
+          "error",
+          "Unable to log out. Please try again."
+        );
+
+        return;
+      }
+
+      window.location.href = "index.html";
+    });
+
+    async function init() {
+      if (!window.mwvSupabase) {
+        showStatus(
+          "error",
+          "Supabase connection is unavailable."
+        );
+        return;
+      }
+
+      const authorized = await requireAdmin();
+
+      if (!authorized) return;
+
+      await loadSettings();
+    }
+
+    init();
+  })();
 </script>
 
 </body>
-
 </html>

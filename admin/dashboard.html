@@ -43,7 +43,9 @@
       min-height: 100vh;
     }
 
-    /* SIDEBAR */
+    /* ==========================================
+       SIDEBAR
+       ========================================== */
 
     .sidebar {
       width: 235px;
@@ -105,7 +107,9 @@
       font-size: 13px;
     }
 
-    /* MAIN */
+    /* ==========================================
+       MAIN
+       ========================================== */
 
     .main {
       margin-left: 235px;
@@ -118,6 +122,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
+      gap: 20px;
     }
 
     h1 {
@@ -130,6 +135,12 @@
       margin-top: 5px;
     }
 
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .btn {
       background: var(--yellow);
       color: #050505;
@@ -137,9 +148,24 @@
       border-radius: 8px;
       text-decoration: none;
       font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    /* STAT CARDS */
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--yellow);
+    }
+
+    /* ==========================================
+       STAT CARDS
+       ========================================== */
 
     .stats {
       display: grid;
@@ -184,10 +210,19 @@
       color: var(--red);
     }
 
-    /* TABLE */
+    /* ==========================================
+       TABLE
+       ========================================== */
 
     .section {
       margin-top: 25px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
     }
 
     .section h2 {
@@ -224,20 +259,101 @@
       font-size: 14px;
     }
 
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
     .status {
       display: inline-block;
       padding: 5px 9px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 800;
+      text-transform: capitalize;
     }
 
-    .pending {
+    .status-new {
       background: #33230f;
       color: #ffad4a;
     }
 
-    /* RESPONSIVE */
+    .status-pending {
+      background: #33230f;
+      color: #ffad4a;
+    }
+
+    .status-contacted {
+      background: #102a3d;
+      color: #5bb8ff;
+    }
+
+    .status-closed {
+      background: #18251e;
+      color: #70e39a;
+    }
+
+    .status-confirmed {
+      background: #18251e;
+      color: #70e39a;
+    }
+
+    .status-default {
+      background: #20262d;
+      color: #cbd0d6;
+    }
+
+    /* ==========================================
+       LOADING / EMPTY / ERROR
+       ========================================== */
+
+    .table-message {
+      text-align: center;
+      padding: 35px;
+      color: var(--muted);
+    }
+
+    .dashboard-status {
+      display: none;
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .dashboard-status.error {
+      display: block;
+      background: rgba(255, 32, 40, 0.08);
+      border: 1px solid rgba(255, 32, 40, 0.4);
+      color: #ff7b80;
+    }
+
+    .dashboard-status.loading {
+      display: block;
+      background: rgba(255, 196, 0, 0.05);
+      border: 1px solid rgba(255, 196, 0, 0.3);
+      color: var(--yellow);
+    }
+
+    /* ==========================================
+       BACKEND STATUS
+       ========================================== */
+
+    .backend-panel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .backend-ok {
+      background: rgba(25, 214, 107, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(25, 214, 107, 0.3);
+    }
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
 
     @media(max-width:850px) {
 
@@ -253,6 +369,15 @@
       .stats {
         grid-template-columns:
           repeat(2, 1fr);
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        flex-direction: column;
+        align-items: stretch;
       }
 
     }
@@ -278,6 +403,18 @@
         grid-template-columns: 1fr;
       }
 
+      .topbar {
+        flex-direction: column;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+
+      .top-actions .btn {
+        text-align: center;
+      }
+
     }
 
   </style>
@@ -287,6 +424,10 @@
 <body>
 
 <div class="layout">
+
+  <!-- ==========================================
+       SIDEBAR
+       ========================================== -->
 
   <aside class="sidebar">
 
@@ -331,6 +472,10 @@
   </aside>
 
 
+  <!-- ==========================================
+       MAIN
+       ========================================== -->
+
   <main class="main">
 
     <div class="topbar">
@@ -347,15 +492,50 @@
 
       </div>
 
-      <a
-        class="btn"
-        href="requests.html"
-      >
-        View Requests →
-      </a>
+      <div class="top-actions">
+
+        <button
+          class="btn btn-secondary"
+          id="refreshButton"
+          type="button"
+        >
+          ↻ Refresh
+        </button>
+
+        <a
+          class="btn"
+          href="requests.html"
+        >
+          View Requests →
+        </a>
+
+        <button
+          class="btn btn-secondary"
+          id="logoutButton"
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
 
     </div>
 
+
+    <!-- ==========================================
+         DASHBOARD STATUS
+         ========================================== -->
+
+    <div
+      class="dashboard-status"
+      id="dashboardStatus"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- ==========================================
+         STAT CARDS
+         ========================================== -->
 
     <div class="stats">
 
@@ -365,8 +545,11 @@
           New Requests
         </div>
 
-        <div class="number yellow">
-          0
+        <div
+          class="number yellow"
+          id="newRequestsCount"
+        >
+          —
         </div>
 
         <div class="muted">
@@ -382,8 +565,11 @@
           Pending Bookings
         </div>
 
-        <div class="number blue">
-          0
+        <div
+          class="number blue"
+          id="pendingBookingsCount"
+        >
+          —
         </div>
 
         <div class="muted">
@@ -399,8 +585,11 @@
           Confirmed
         </div>
 
-        <div class="number green">
-          0
+        <div
+          class="number green"
+          id="confirmedBookingsCount"
+        >
+          —
         </div>
 
         <div class="muted">
@@ -416,8 +605,11 @@
           Total Requests
         </div>
 
-        <div class="number">
-          0
+        <div
+          class="number"
+          id="totalRequestsCount"
+        >
+          —
         </div>
 
         <div class="muted">
@@ -429,11 +621,19 @@
     </div>
 
 
+    <!-- ==========================================
+         RECENT REQUESTS
+         ========================================== -->
+
     <section class="section">
 
-      <h2>
-        Recent Requests
-      </h2>
+      <div class="section-header">
+
+        <h2>
+          Recent Requests
+        </h2>
+
+      </div>
 
       <div class="table-container">
 
@@ -453,17 +653,15 @@
 
           </thead>
 
-          <tbody>
+          <tbody id="recentRequestsBody">
 
             <tr>
 
-              <td colspan="5">
-
-                <span class="muted">
-                  No requests yet.
-                  Supabase connection will populate
-                  this table.
-                </span>
+              <td
+                colspan="5"
+                class="table-message"
+              >
+                Loading requests...
 
               </td>
 
@@ -478,20 +676,21 @@
     </section>
 
 
+    <!-- ==========================================
+         BACKEND STATUS
+         ========================================== -->
+
     <section class="section">
 
-      <div class="stat">
+      <div class="stat backend-panel">
 
-        <span class="status pending">
-          BACKEND PENDING
+        <span class="status backend-ok">
+          SUPABASE CONNECTED
         </span>
 
         <span class="muted">
-
-          Database, authentication and API
-          connection will be added in the
-          backend phase.
-
+          Database, authentication and dashboard
+          connection are active.
         </span>
 
       </div>
@@ -501,6 +700,531 @@
   </main>
 
 </div>
+
+
+<!-- ==========================================
+     SUPABASE
+     ========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/supabase.js"></script>
+
+
+<!-- ==========================================
+     DASHBOARD LOGIC
+     ========================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const newRequestsCount =
+    document.getElementById("newRequestsCount");
+
+  const pendingBookingsCount =
+    document.getElementById("pendingBookingsCount");
+
+  const confirmedBookingsCount =
+    document.getElementById("confirmedBookingsCount");
+
+  const totalRequestsCount =
+    document.getElementById("totalRequestsCount");
+
+  const recentRequestsBody =
+    document.getElementById("recentRequestsBody");
+
+  const dashboardStatus =
+    document.getElementById("dashboardStatus");
+
+  const refreshButton =
+    document.getElementById("refreshButton");
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+
+  // ==========================================
+  // SUPABASE CHECK
+  // ==========================================
+
+  if (!window.mwvSupabase) {
+
+    showStatus(
+      "error",
+      "Supabase connection is unavailable."
+    );
+
+    return;
+
+  }
+
+
+  // ==========================================
+  // ADMIN AUTHORIZATION
+  // ==========================================
+
+  const authorized =
+    await requireAdmin();
+
+  if (!authorized) {
+    return;
+  }
+
+
+  // ==========================================
+  // LOAD DASHBOARD
+  // ==========================================
+
+  await loadDashboard();
+
+
+  // ==========================================
+  // REFRESH
+  // ==========================================
+
+  refreshButton.addEventListener(
+    "click",
+    async () => {
+
+      await loadDashboard();
+
+    }
+  );
+
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+
+      logoutButton.disabled = true;
+
+      logoutButton.textContent =
+        "Logging out…";
+
+
+      const {
+        error
+      } =
+        await window.mwvSupabase.auth.signOut();
+
+
+      if (error) {
+
+        console.error(
+          "MoneyWithVikas logout error:",
+          error
+        );
+
+        logoutButton.disabled = false;
+
+        logoutButton.textContent =
+          "Logout";
+
+        showStatus(
+          "error",
+          "Unable to log out. Please try again."
+        );
+
+        return;
+
+      }
+
+
+      window.location.href =
+        "index.html";
+
+    }
+  );
+
+
+  // ==========================================
+  // REQUIRE ADMIN
+  // ==========================================
+
+  async function requireAdmin() {
+
+    const {
+      data: {
+        user
+      }
+    } =
+      await window.mwvSupabase.auth.getUser();
+
+
+    if (!user) {
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    const {
+      data: admin,
+      error
+    } =
+      await window.mwvSupabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(
+        "MoneyWithVikas admin verification error:",
+        error
+      );
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    if (!admin) {
+
+      await window.mwvSupabase.auth.signOut();
+
+      window.location.href =
+        "index.html";
+
+      return false;
+
+    }
+
+
+    return true;
+
+  }
+
+
+  // ==========================================
+  // LOAD DASHBOARD DATA
+  // ==========================================
+
+  async function loadDashboard() {
+
+    showStatus(
+      "loading",
+      "Loading dashboard data..."
+    );
+
+
+    try {
+
+      // ----------------------------------------
+      // REQUEST COUNTS
+      // ----------------------------------------
+
+      const [
+        newRequests,
+        totalRequests,
+        pendingBookings,
+        confirmedBookings,
+        recentRequests
+      ] =
+        await Promise.all([
+
+          window.mwvSupabase
+            .from("contact_requests")
+            .select("*", {
+              count: "exact",
+              head: true
+            })
+            .eq("status", "new"),
+
+
+          window.mwvSupabase
+            .from("contact_requests")
+            .select("*", {
+              count: "exact",
+              head: true
+            }),
+
+
+          window.mwvSupabase
+            .from("bookings")
+            .select("*", {
+              count: "exact",
+              head: true
+            })
+            .eq("status", "pending"),
+
+
+          window.mwvSupabase
+            .from("bookings")
+            .select("*", {
+              count: "exact",
+              head: true
+            })
+            .eq("status", "confirmed"),
+
+
+          window.mwvSupabase
+            .from("contact_requests")
+            .select(
+              "id, name, purpose, location, status, created_at"
+            )
+            .order(
+              "created_at",
+              {
+                ascending: false
+              }
+            )
+            .limit(5)
+
+        ]);
+
+
+      // ----------------------------------------
+      // CHECK ERRORS
+      // ----------------------------------------
+
+      if (newRequests.error)
+        throw newRequests.error;
+
+      if (totalRequests.error)
+        throw totalRequests.error;
+
+      if (pendingBookings.error)
+        throw pendingBookings.error;
+
+      if (confirmedBookings.error)
+        throw confirmedBookings.error;
+
+      if (recentRequests.error)
+        throw recentRequests.error;
+
+
+      // ----------------------------------------
+      // UPDATE COUNTERS
+      // ----------------------------------------
+
+      newRequestsCount.textContent =
+        newRequests.count ?? 0;
+
+      totalRequestsCount.textContent =
+        totalRequests.count ?? 0;
+
+      pendingBookingsCount.textContent =
+        pendingBookings.count ?? 0;
+
+      confirmedBookingsCount.textContent =
+        confirmedBookings.count ?? 0;
+
+
+      // ----------------------------------------
+      // UPDATE RECENT REQUESTS
+      // ----------------------------------------
+
+      renderRecentRequests(
+        recentRequests.data || []
+      );
+
+
+      hideStatus();
+
+
+    } catch (error) {
+
+      console.error(
+        "MoneyWithVikas dashboard error:",
+        error
+      );
+
+      showStatus(
+        "error",
+        "Unable to load dashboard data. Please refresh and try again."
+      );
+
+      recentRequestsBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="table-message">
+            Unable to load requests.
+          </td>
+        </tr>
+      `;
+
+    }
+
+  }
+
+
+  // ==========================================
+  // RENDER RECENT REQUESTS
+  // ==========================================
+
+  function renderRecentRequests(requests) {
+
+    if (!requests.length) {
+
+      recentRequestsBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="table-message">
+            No requests found.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    recentRequestsBody.innerHTML =
+      requests
+        .map((request) => {
+
+          const status =
+            String(
+              request.status || "new"
+            ).toLowerCase();
+
+
+          return `
+            <tr>
+
+              <td>
+                ${escapeHtml(request.name)}
+              </td>
+
+              <td>
+                ${escapeHtml(request.purpose)}
+              </td>
+
+              <td>
+                ${escapeHtml(request.location)}
+              </td>
+
+              <td>
+                <span class="status ${getStatusClass(status)}">
+                  ${escapeHtml(status)}
+                </span>
+              </td>
+
+              <td>
+                ${formatDate(request.created_at)}
+              </td>
+
+            </tr>
+          `;
+
+        })
+        .join("");
+
+  }
+
+
+  // ==========================================
+  // STATUS CLASS
+  // ==========================================
+
+  function getStatusClass(status) {
+
+    if (status === "new")
+      return "status-new";
+
+    if (status === "pending")
+      return "status-pending";
+
+    if (status === "contacted")
+      return "status-contacted";
+
+    if (status === "closed")
+      return "status-closed";
+
+    if (status === "confirmed")
+      return "status-confirmed";
+
+    return "status-default";
+
+  }
+
+
+  // ==========================================
+  // DATE FORMAT
+  // ==========================================
+
+  function formatDate(value) {
+
+    if (!value) return "—";
+
+
+    const date =
+      new Date(value);
+
+
+    if (Number.isNaN(date.getTime()))
+      return "—";
+
+
+    return date.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
+    );
+
+  }
+
+
+  // ==========================================
+  // HTML ESCAPE
+  // ==========================================
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  // ==========================================
+  // STATUS MESSAGE
+  // ==========================================
+
+  function showStatus(type, message) {
+
+    dashboardStatus.className =
+      `dashboard-status ${type}`;
+
+    dashboardStatus.textContent =
+      message;
+
+  }
+
+
+  function hideStatus() {
+
+    dashboardStatus.className =
+      "dashboard-status";
+
+    dashboardStatus.textContent =
+      "";
+
+  }
+
+});
+
+</script>
 
 </body>
 </html>
