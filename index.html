@@ -17,7 +17,6 @@
 <link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/style.css">
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -162,8 +161,337 @@
   <div class="copy">© 2026 MoneyWithVikas — People. Finance. Opportunities.</div>
 </div></footer>
 
+<!-- ==========================================
+     MONEYWITHVIKAS — BOOKING MODAL
+     ========================================== -->
 
+<div
+  class="booking-modal"
+  id="bookingModal"
+  aria-hidden="true"
+>
+
+  <div class="booking-overlay" id="bookingOverlay"></div>
+
+  <div
+    class="booking-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="bookingTitle"
+  >
+
+    <!-- HEADER -->
+
+    <div class="booking-header">
+
+      <div>
+
+        <div class="booking-eyebrow">
+          MONEYWITHVIKAS
+        </div>
+
+        <h2 id="bookingTitle">
+          Book a Conversation
+        </h2>
+
+        <p id="bookingSubtitle">
+          Choose your preferred date and time.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="booking-close"
+        id="bookingClose"
+        aria-label="Close booking"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- BOOKING FORM -->
+
+    <form
+      id="bookingForm"
+      novalidate
+    >
+
+      <input
+        type="hidden"
+        id="bookingDuration"
+        name="duration_minutes"
+      >
+
+
+      <!-- DURATION -->
+
+      <div class="booking-section">
+
+        <label>
+          Meeting
+        </label>
+
+        <div class="duration-display">
+
+          <span id="selectedDuration">
+            15 Minutes
+          </span>
+
+        </div>
+
+      </div>
+      <!-- DATE -->
+
+      <div class="booking-section">
+
+        <label>
+          Preferred Day &amp; Date
+        </label>
+
+        <div class="booking-date-grid">
+
+          <div class="booking-date-day">
+            <span class="booking-field-caption">Day</span>
+
+            <div
+              id="bookingDay"
+              class="booking-day-display"
+              aria-live="polite"
+            >
+              Monday
+            </div>
+          </div>
+
+          <div class="booking-date-value">
+            <span class="booking-field-caption">Date</span>
+
+            <input
+              type="date"
+              id="bookingDate"
+              name="preferred_date"
+              required
+            >
+          </div>
+
+        </div>
+
+        <div
+          id="bookingDateSummary"
+          class="booking-date-summary"
+          aria-live="polite"
+        >
+          Monday • 14 September 2026
+        </div>
+
+      </div>
+
+
+      <!-- TIME -->
+
+      <div class="booking-section">
+
+        <label for="bookingTimeSelect">
+          Available Time
+        </label>
+
+        <select
+          id="bookingTimeSelect"
+          class="booking-time-select"
+          aria-label="Available booking time"
+        >
+          <option value="">
+            Select an available time
+          </option>
+        </select>
+
+        <input
+          type="hidden"
+          id="bookingTime"
+          name="preferred_time"
+          required
+        >
+
+        <div class="booking-time-help">
+          Times are shown in India Standard Time (IST).
+        </div>
+
+      </div>
+
+
+
+      <!-- CUSTOMER DETAILS -->
+
+      <div class="booking-section">
+
+        <label for="bookingName">
+          Full Name
+        </label>
+
+        <input
+          type="text"
+          id="bookingName"
+          name="name"
+          placeholder="Your full name"
+          autocomplete="name"
+          required
+        >
+
+      </div>
+
+
+      <div class="booking-section">
+
+        <label for="bookingPhone">
+          Phone Number
+        </label>
+
+        <input
+          type="tel"
+          id="bookingPhone"
+          name="phone"
+          placeholder="Your phone number"
+          autocomplete="tel"
+          required
+        >
+
+      </div>
+
+
+      <div class="booking-section">
+
+        <label for="bookingEmail">
+          Email Address
+        </label>
+
+        <input
+          type="email"
+          id="bookingEmail"
+          name="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+
+      </div>
+
+
+      <div class="booking-section">
+
+        <label for="bookingNotes">
+          Notes
+          <span class="optional">
+            Optional
+          </span>
+        </label>
+
+        <textarea
+          id="bookingNotes"
+          name="notes"
+          rows="3"
+          placeholder="Anything you'd like Vikas to know before the conversation?"
+        ></textarea>
+
+      </div>
+
+
+      <!-- CONSENT -->
+
+      <label class="booking-consent">
+
+        <input
+          type="checkbox"
+          id="bookingConsent"
+          name="consent"
+          required
+        >
+
+        <span>
+          I agree to submit this booking request
+          and be contacted regarding the meeting.
+        </span>
+
+      </label>
+
+
+      <!-- STATUS -->
+
+      <div
+        id="bookingStatus"
+        class="booking-status"
+        aria-live="polite"
+      ></div>
+
+
+      <!-- SUBMIT -->
+
+      <button
+        type="submit"
+        class="booking-submit"
+        id="bookingSubmit"
+      >
+        Confirm Booking →
+      </button>
+
+    </form>
+
+
+    <!-- SUCCESS -->
+
+    <div
+      id="bookingSuccess"
+      class="booking-success"
+      hidden
+    >
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h2>
+        Booking Request Received
+      </h2>
+
+      <p>
+        Your booking request has been successfully submitted.
+      </p>
+
+      <div class="booking-reference-box">
+
+        <span>
+          Booking Reference
+        </span>
+
+        <strong id="bookingReference">
+          —
+        </strong>
+
+      </div>
+
+      <p class="success-note">
+        Your request is currently pending confirmation.
+        We will get back to you soon.
+      </p>
+
+      <button
+        type="button"
+        class="booking-submit"
+        id="bookingDone"
+      >
+        Done
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/app.js"></script>
+<script src="js/supabase.js"></script>
 <script src="js/booking.js"></script>
 <script src="js/forms.js"></script>
 </body>
