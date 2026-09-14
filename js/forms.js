@@ -43,25 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ------------------------------------------
-    // CHECK SUPABASE CONNECTION
-    // ------------------------------------------
-
-    if (!window.mwvSupabase) {
-
-      console.error(
-        "MoneyWithVikas: Supabase client is not available."
-      );
-
-      showFormStatus(
-        "error",
-        "The request service is temporarily unavailable. Please try again."
-      );
-
-      return;
-    }
-
-
-    // ------------------------------------------
     // GET FORM DATA
     // ------------------------------------------
 
@@ -137,24 +118,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ------------------------------------------
-    // SEND TO SUPABASE
+    // SEND TO NETLIFY FUNCTION
     // ------------------------------------------
 
     try {
 
-      const { error } =
-        await mwvSupabase
-          .from("contact_requests")
-          .insert(requestData)
+      const response =
+        await fetch(
+          "/.netlify/functions/submit-request",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body:
+              JSON.stringify(requestData)
+          }
+        );
 
 
       // ----------------------------------------
-      // SUPABASE ERROR
+      // READ RESPONSE
       // ----------------------------------------
 
-      if (error) {
+      let result;
 
-        throw error;
+      try {
+
+        result =
+          await response.json();
+
+      } catch {
+
+        throw new Error(
+          "Invalid response from request service."
+        );
+
+      }
+
+
+      // ----------------------------------------
+      // HANDLE SERVER ERROR
+      // ----------------------------------------
+
+      if (!response.ok || !result.success) {
+
+        throw new Error(
+          result.error ||
+          "Unable to submit your request."
+        );
 
       }
 
@@ -164,7 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // ----------------------------------------
 
       console.log(
-        "MoneyWithVikas request saved successfully.",
+        "MoneyWithVikas request submitted successfully.",
+        result
       );
 
       showFormStatus(
@@ -184,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showFormStatus(
         "error",
+        error.message ||
         "Something went wrong while submitting your request. Please try again."
       );
 
