@@ -15,20 +15,18 @@
 
 const ALLOWED_ORIGIN = "https://moneywithvikas.netlify.app";
 
-const headers = {
-  "Content-Type": "application/json",
+const corsHeaders = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Vary": "Origin"
 };
 
-function response(statusCode, body) {
-  return {
-    statusCode,
-    headers,
-    body: JSON.stringify(body)
-  };
+function jsonResponse(body, status = 200) {
+  return Response.json(body, {
+    status,
+    headers: corsHeaders
+  });
 }
 
 function clean(value, maxLength = 1000) {
@@ -40,21 +38,24 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export default async function handler(event) {
-  // Handle browser CORS preflight.
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 204,
-      headers
-    };
+export default async function handler(request) {
+  // Handle CORS preflight.
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders
+    });
   }
 
   // Only POST is allowed.
-  if (event.httpMethod !== "POST") {
-    return response(405, {
-      success: false,
-      error: "Method not allowed."
-    });
+  if (request.method !== "POST") {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Method not allowed."
+      },
+      405
+    );
   }
 
   try {
@@ -62,26 +63,32 @@ export default async function handler(event) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 
-    // Make sure the server is configured.
+    // Verify server configuration.
     if (!supabaseUrl || !supabaseSecretKey) {
       console.error("Missing Supabase server environment variables.");
 
-      return response(500, {
-        success: false,
-        error: "Server configuration error."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Server configuration error."
+        },
+        500
+      );
     }
 
-    // Parse request body.
+    // Parse JSON request body.
     let body;
 
     try {
-      body = JSON.parse(event.body || "{}");
+      body = await request.json();
     } catch {
-      return response(400, {
-        success: false,
-        error: "Invalid request data."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Invalid request data."
+        },
+        400
+      );
     }
 
     // Read and sanitize fields.
@@ -104,33 +111,38 @@ export default async function handler(event) {
       !location ||
       !message
     ) {
-      return response(400, {
-        success: false,
-        error: "Please complete all required fields."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Please complete all required fields."
+        },
+        400
+      );
     }
 
     // Validate email.
     if (!isValidEmail(email)) {
-      return response(400, {
-        success: false,
-        error: "Please enter a valid email address."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Please enter a valid email address."
+        },
+        400
+      );
     }
 
     // Consent is mandatory.
     if (!consent) {
-      return response(400, {
-        success: false,
-        error: "Consent is required to submit this request."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Consent is required to submit this request."
+        },
+        400
+      );
     }
 
-    // Insert using the Supabase server secret key.
-    //
-    // IMPORTANT:
-    // SUPABASE_SECRET_KEY exists only on Netlify's server.
-    // It is never sent to the browser.
+    // Insert into Supabase using the server-only secret key.
     const insertResponse = await fetch(
       `${supabaseUrl}/rest/v1/contact_requests`,
       {
@@ -155,7 +167,7 @@ export default async function handler(event) {
       }
     );
 
-    // Handle Supabase failure.
+    // Handle Supabase errors.
     if (!insertResponse.ok) {
       const errorText = await insertResponse.text();
 
@@ -165,13 +177,16 @@ export default async function handler(event) {
         errorText
       );
 
-      return response(500, {
-        success: false,
-        error: "Unable to submit your request right now."
-      });
+      return jsonResponse(
+        {
+          success: false,
+          error: "Unable to submit your request right now."
+        },
+        500
+      );
     }
 
-    // Read inserted record.
+    // Read the inserted record.
     const insertedRows = await insertResponse.json();
 
     const requestId =
@@ -179,8 +194,8 @@ export default async function handler(event) {
         ? insertedRows[0].id
         : null;
 
-    // Success response.
-    return response(200, {
+    // Successful submission.
+    return jsonResponse({
       success: true,
       message: "Request submitted successfully.",
       request_id: requestId
@@ -189,9 +204,12 @@ export default async function handler(event) {
   } catch (error) {
     console.error("submit-request function error:", error);
 
-    return response(500, {
-      success: false,
-      error: "Something went wrong. Please try again."
-    });
+    return jsonResponse(
+      {
+        success: false,
+        error: "Something went wrong. Please try again."
+      },
+      500
+    );
   }
 }
