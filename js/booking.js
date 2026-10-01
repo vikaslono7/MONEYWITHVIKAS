@@ -1,7 +1,7 @@
 /* =========================================================
    MONEYWITHVIKAS — DYNAMIC BOOKING SYSTEM
    PHASE 2.12C-2B
-   LIVE ADMIN SETTINGS + SECURE BOOKING RPC
+   LIVE ADMIN SETTINGS + SECURE BOOKING FUNCTION
    ========================================================= */
 
 (function () {
@@ -436,7 +436,6 @@
         .split("-")
         .map(Number);
 
-
     const date =
       new Date(
         Date.UTC(
@@ -449,25 +448,21 @@
         )
       );
 
-
     const dayName =
       dayNames[
         date.getUTCDay()
       ];
-
 
     const monthName =
       monthNames[
         month - 1
       ];
 
-
     if (bookingDay) {
 
       bookingDay.textContent =
         dayName;
     }
-
 
     if (bookingDateSummary) {
 
@@ -487,7 +482,6 @@
         `${today}T12:00:00Z`
       );
 
-
     for (
       let i = 0;
       i < 370;
@@ -500,7 +494,6 @@
       date.setUTCDate(
         date.getUTCDate() + i
       );
-
 
       const year =
         date.getUTCFullYear();
@@ -515,10 +508,8 @@
           date.getUTCDate()
         ).padStart(2, "0");
 
-
       const dateString =
         `${year}-${month}-${day}`;
-
 
       if (
         isBookingDay(
@@ -529,7 +520,6 @@
         return dateString;
       }
     }
-
 
     return today;
   }
@@ -551,7 +541,6 @@
         .split(":")
         .map(Number);
 
-
     const date =
       new Date();
 
@@ -561,7 +550,6 @@
       0,
       0
     );
-
 
     return new Intl.DateTimeFormat(
       "en-IN",
@@ -591,7 +579,6 @@
         startB
       );
 
-
     const endA =
       startMinutesA +
       durationA;
@@ -599,7 +586,6 @@
     const endB =
       startMinutesB +
       durationB;
-
 
     return (
       startMinutesA < endB &&
@@ -620,26 +606,21 @@
           ? 30
           : 15;
 
-
       modal.classList.add(
         "open"
       );
-
 
       modal.setAttribute(
         "aria-hidden",
         "false"
       );
 
-
       document.body.style.overflow =
         "hidden";
-
 
       showLoading(
         "Loading booking availability..."
       );
-
 
       try {
 
@@ -647,16 +628,13 @@
           true
         );
 
-
         selectedDuration =
           requestedDuration;
-
 
         const durationAllowed =
           selectedDuration === 15
             ? !!bookingSettings.duration_15_enabled
             : !!bookingSettings.duration_30_enabled;
-
 
         if (!durationAllowed) {
 
@@ -669,38 +647,28 @@
           return;
         }
 
-
         selectedTime = null;
-
 
         durationInput.value =
           selectedDuration;
 
-
         durationDisplay.textContent =
           `${selectedDuration} Minutes`;
 
-
         timeInput.value = "";
 
-
         if (timeSelect) {
-
           timeSelect.value = "";
         }
 
-
         clearStatus();
-
 
         form.hidden = false;
 
         successBox.hidden = true;
 
-
         dateInput.min =
           getTodayInConfiguredTimezone();
-
 
         if (
           !dateInput.value ||
@@ -713,14 +681,11 @@
             getNextBookingDate();
         }
 
-
         formatSelectedDate(
           dateInput.value
         );
 
-
         renderInitialSlots();
-
 
         setTimeout(() => {
 
@@ -728,9 +693,7 @@
 
         }, 50);
 
-
         await loadAvailability();
-
 
       } catch (error) {
 
@@ -739,12 +702,10 @@
           error
         );
 
-
         showError(
           error.message ||
           "Unable to load booking settings. Please try again."
         );
-
 
         renderInitialSlots();
       }
@@ -752,7 +713,7 @@
 
 
   /* =========================================================
-     CLOSE MODAL
+     CLOSE BOOKING
      ========================================================= */
 
   function closeBooking() {
@@ -761,16 +722,13 @@
       "open"
     );
 
-
     modal.setAttribute(
       "aria-hidden",
       "true"
     );
 
-
     document.body.style.overflow =
       "";
-
 
     clearStatus();
   }
@@ -830,23 +788,17 @@
 
       selectedTime = null;
 
-
       timeInput.value = "";
 
-
       if (timeSelect) {
-
         timeSelect.value = "";
       }
 
-
       clearStatus();
-
 
       formatSelectedDate(
         dateInput.value
       );
-
 
       if (!dateInput.value) {
 
@@ -855,10 +807,8 @@
         return;
       }
 
-
       const today =
         getTodayInConfiguredTimezone();
-
 
       if (
         dateInput.value < today
@@ -868,12 +818,10 @@
           "Please select today or a future date."
         );
 
-
         renderInitialSlots();
 
         return;
       }
-
 
       if (
         !isBookingDay(
@@ -887,12 +835,10 @@
           )
         );
 
-
         renderInitialSlots();
 
         return;
       }
-
 
       await loadAvailability();
     }
@@ -909,19 +855,15 @@
       return;
     }
 
-
     timeSelect.innerHTML = `
       <option value="">
         Select an available time
       </option>
     `;
 
-
     timeSelect.disabled = true;
 
-
     selectedTime = null;
-
 
     timeInput.value = "";
   }
@@ -935,10 +877,8 @@
       return;
     }
 
-
     statusBox.textContent =
       message;
-
 
     statusBox.className =
       "booking-status success";
@@ -960,12 +900,10 @@
       return;
     }
 
-
     if (!bookingSettings) {
 
       await loadBookingSettings();
     }
-
 
     if (
       !isBookingDay(
@@ -978,7 +916,6 @@
       return;
     }
 
-
     if (timeSelect) {
 
       timeSelect.innerHTML = `
@@ -987,10 +924,8 @@
         </option>
       `;
 
-
       timeSelect.disabled = true;
     }
-
 
     try {
 
@@ -1006,7 +941,6 @@
           }
         );
 
-
       if (error) {
 
         console.error(
@@ -1014,24 +948,19 @@
           error
         );
 
-
         showError(
           "Unable to load availability. Please try again."
         );
 
-
         return;
       }
-
 
       bookedSlots =
         Array.isArray(data)
           ? data
           : [];
 
-
       renderTimeSlots();
-
 
     } catch (error) {
 
@@ -1039,7 +968,6 @@
         "Availability error:",
         error
       );
-
 
       showError(
         "Something went wrong while checking availability."
@@ -1064,42 +992,34 @@
       return;
     }
 
-
     timeSelect.innerHTML = "";
-
 
     selectedTime = null;
 
     timeInput.value = "";
 
-
     const duration =
       selectedDuration;
-
 
     const startMinutes =
       timeToMinutes(
         bookingSettings.booking_start_time
       );
 
-
     const endMinutes =
       timeToMinutes(
         bookingSettings.booking_end_time
       );
-
 
     const interval =
       Number(
         bookingSettings.slot_interval_minutes
       ) || 15;
 
-
     const placeholder =
       document.createElement(
         "option"
       );
-
 
     placeholder.value = "";
 
@@ -1110,14 +1030,11 @@
 
     placeholder.disabled = true;
 
-
     timeSelect.appendChild(
       placeholder
     );
 
-
     let availableCount = 0;
-
 
     for (
       let minutes = startMinutes;
@@ -1133,7 +1050,6 @@
           minutes
         );
 
-
       const isBooked =
         bookedSlots.some(
           slot => {
@@ -1145,12 +1061,10 @@
               return false;
             }
 
-
             const bookedDate =
               new Date(
                 slot.scheduled_at
               );
-
 
             const bookedIST =
               new Intl.DateTimeFormat(
@@ -1175,7 +1089,6 @@
                 bookedDate
               );
 
-
             const getPart =
               type =>
                 bookedIST.find(
@@ -1183,17 +1096,14 @@
                     p.type === type
                 )?.value;
 
-
             const bookedDateString =
               `${getPart("year")}-` +
               `${getPart("month")}-` +
               `${getPart("day")}`;
 
-
             const bookedTime =
               `${getPart("hour")}:` +
               `${getPart("minute")}`;
-
 
             if (
               bookedDateString !==
@@ -1202,7 +1112,6 @@
 
               return false;
             }
-
 
             return overlaps(
               time,
@@ -1216,21 +1125,17 @@
           }
         );
 
-
       const option =
         document.createElement(
           "option"
         );
 
-
       option.value =
         time;
-
 
       if (isBooked) {
 
         option.disabled = true;
-
 
         option.textContent =
           `${formatTime(time)} — Booked`;
@@ -1240,16 +1145,13 @@
         option.textContent =
           formatTime(time);
 
-
         availableCount++;
       }
-
 
       timeSelect.appendChild(
         option
       );
     }
-
 
     if (
       availableCount === 0
@@ -1261,12 +1163,10 @@
         </option>
       `;
 
-
       timeSelect.disabled = true;
 
       return;
     }
-
 
     timeSelect.disabled = false;
   }
@@ -1286,10 +1186,8 @@
           timeSelect.value ||
           null;
 
-
         timeInput.value =
           selectedTime || "";
-
 
         clearStatus();
       }
@@ -1299,6 +1197,7 @@
 
   /* =========================================================
      FORM SUBMISSION
+     SECURE NETLIFY FUNCTION
      ========================================================= */
 
   form.addEventListener(
@@ -1307,9 +1206,7 @@
 
       event.preventDefault();
 
-
       clearStatus();
-
 
       if (!bookingSettings) {
 
@@ -1323,7 +1220,6 @@
             "Booking settings could not be loaded. Please try again."
           );
 
-
           return;
         }
       }
@@ -1334,7 +1230,6 @@
         showError(
           "Please select a date."
         );
-
 
         return;
       }
@@ -1348,7 +1243,6 @@
         showError(
           "Please select today or a future date."
         );
-
 
         return;
       }
@@ -1366,7 +1260,6 @@
           )
         );
 
-
         return;
       }
 
@@ -1383,7 +1276,6 @@
           `${selectedDuration}-minute bookings are currently unavailable.`
         );
 
-
         return;
       }
 
@@ -1394,12 +1286,9 @@
           "Please select an available time."
         );
 
-
         if (timeSelect) {
-
           timeSelect.focus();
         }
-
 
         return;
       }
@@ -1413,9 +1302,7 @@
           "Please enter your full name."
         );
 
-
         nameInput.focus();
-
 
         return;
       }
@@ -1429,9 +1316,7 @@
           "Please enter your phone number."
         );
 
-
         phoneInput.focus();
-
 
         return;
       }
@@ -1445,9 +1330,7 @@
           "Please enter your email address."
         );
 
-
         emailInput.focus();
-
 
         return;
       }
@@ -1461,9 +1344,7 @@
           "Please agree to the booking consent before continuing."
         );
 
-
         consentInput.focus();
-
 
         return;
       }
@@ -1475,7 +1356,6 @@
           "Booking system is not connected. Please try again."
         );
 
-
         return;
       }
 
@@ -1483,122 +1363,127 @@
       submitButton.disabled =
         true;
 
-
       submitButton.textContent =
         "Submitting Booking...";
 
 
       try {
 
-        const {
-          data,
-          error
-        } =
-          await window.mwvSupabase.rpc(
-            "create_booking",
+        /* =====================================================
+           SEND BOOKING TO SECURE NETLIFY FUNCTION
+           ===================================================== */
+
+        const bookingData = {
+
+          name:
+            nameInput.value.trim(),
+
+          phone:
+            phoneInput.value.trim(),
+
+          email:
+            emailInput.value.trim(),
+
+          meeting_type:
+            "consultation",
+
+          duration_minutes:
+            selectedDuration,
+
+          preferred_date:
+            dateInput.value,
+
+          preferred_time:
+            selectedTime,
+
+          notes:
+            notesInput.value.trim() ||
+            null,
+
+          consent:
+            true
+        };
+
+
+        const response =
+          await fetch(
+            "/.netlify/functions/booking",
             {
-              p_name:
-                nameInput.value.trim(),
+              method: "POST",
 
-              p_phone:
-                phoneInput.value.trim(),
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
 
-              p_email:
-                emailInput.value.trim(),
-
-              p_duration_minutes:
-                selectedDuration,
-
-              p_preferred_date:
-                dateInput.value,
-
-              p_preferred_time:
-                selectedTime,
-
-              p_notes:
-                notesInput.value.trim() ||
-                null,
-
-              p_consent:
-                true
+              body:
+                JSON.stringify(
+                  bookingData
+                )
             }
           );
 
 
-        if (error) {
+        let result;
 
-          console.error(
-            "Booking RPC error:",
-            error
+        try {
+
+          result =
+            await response.json();
+
+        } catch {
+
+          throw new Error(
+            "Invalid response from booking service."
           );
+        }
 
 
-          const errorMessage =
-            error.message ||
-            "Unable to submit your booking. Please try again.";
+        /* =====================================================
+           HANDLE BOOKING RESPONSE
+           ===================================================== */
 
+        if (
+          !response.ok ||
+          !result.success
+        ) {
 
           if (
-            errorMessage
-              .toLowerCase()
-              .includes("time slot") ||
-
-            errorMessage
-              .toLowerCase()
-              .includes("overlap") ||
-
-            errorMessage
-              .toLowerCase()
-              .includes("booked")
+            response.status === 409
           ) {
 
             showError(
+              result.error ||
               "That time was just booked by someone else. Please choose another available time."
             );
 
-
             await loadAvailability();
 
-          } else {
-
-            showError(
-              errorMessage
-            );
+            return;
           }
 
 
-          return;
-        }
-
-
-        const booking =
-          Array.isArray(data)
-            ? data[0]
-            : data;
-
-
-        if (
-          !booking ||
-          !booking.booking_reference
-        ) {
-
-          console.error(
-            "Booking created but no booking reference was returned:",
-            data
-          );
-
-
           showError(
-            "Booking was created, but the confirmation reference could not be retrieved. Please contact us."
+            result.error ||
+            "Unable to submit your booking. Please try again."
           );
-
 
           return;
         }
 
+
+        console.log(
+          "MoneyWithVikas booking submitted successfully.",
+          result
+        );
+
+
+        /* =====================================================
+           SHOW SUCCESS SCREEN
+           ===================================================== */
 
         showBookingSuccess(
-          booking.booking_reference
+          result.booking_reference
         );
 
 
@@ -1609,17 +1494,15 @@
           error
         );
 
-
         showError(
+          error.message ||
           "Something went wrong while submitting your booking. Please try again."
         );
-
 
       } finally {
 
         submitButton.disabled =
           false;
-
 
         submitButton.textContent =
           "Confirm Booking →";
